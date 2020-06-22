@@ -1,0 +1,30 @@
+<div id="sidenav-left" class="col s2 m2 l2 monpro">
+    <ul class="actions_rapides">
+        <li class="divider"></li>
+        <li class="action"><a class="btn monpro waves-effect waves-light center" href="{{ path('app_envoi_enquete') }}"><i
+                        class="large material-icons">send</i>
+                <span class="hide-on-med-and-down">Envoyer une nouvelle enquête de satisfaction</span></a></li>
+        <li class="divider"></li>
+        <li class="action"><a class="btn monpro waves-effect waves-light center" href="{{ path('app_liste_avis') }}"><i
+                        class="large material-icons">visibility</i>
+                <span class="hide-on-med-and-down">Voir tous les avis</span></a></li>
+        <li class="divider"></li>
+        {% if app.user %}
+            <li class="action"><a title="Déconnexion" class="btn monpro waves-effect waves-light center" href="{{ path('app_logout') }}">
+                    <i class="large center material-icons">exit_to_app</i><span style="vertical-align: super;">Déconnexion</span>
+                </a></li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="divider"></li>
+                <li class="action"><a title="Admin" class="btn monpro waves-effect waves-light center" href="{{ path('app_index_admin') }}">
+                        <i class="large center material-icons">settings</i><span style="vertical-align: super;">Admin</span>
+                    </a></li>
+            {% endif %}
+        {% else %}
+            <li class="action"><a title="Connexion" class="btn monpro waves-effect waves-light center" href="{{ path('app_login') }}">
+                    <i class="large center material-icons">account_circle</i><span style="vertical-align: super;">Connexion</span>
+                </a>
+            </li>
+        {% endif %}
+        <li class="divider"></li>
+    </ul>
+</div>

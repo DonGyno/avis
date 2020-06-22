@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Page non trouvé - {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <h1 class="center-align">Erreur 404 - Page non trouvé</h1>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col s12">
+                <p class="flash-error p-4">La page est introuvable, vous avez demandé une page qui n'existe pas ou bien qui n'existe plus !</p>
+                <p>
+                    <a class="btn monpro waves-effect waves-light center" href="{{ path('app_index_index') }}">Retour à l'accueil</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

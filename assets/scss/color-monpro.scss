@@ -1,0 +1,63 @@
+$material-icons-font-path: '~material-icons/iconfont/';
+
+@import "~material-icons/iconfont/material-icons.scss";
+
+$monpro: (
+  "base":#002e5b,
+  "lighten-1":lighten(#002e5b,10),
+  "lighten-2":lighten(#002e5b,20),
+  "lighten-3":lighten(#002e5b,30),
+  "lighten-4":lighten(#002e5b,40),
+  "lighten-5":lighten(#002e5b,50),
+  "darken-1":darken(#002e5b,10),
+  "darken-2":darken(#002e5b,20),
+  "darken-3":darken(#002e5b,30),
+  "darken-4":darken(#002e5b,40),
+  "darken-5":darken(#002e5b,50),
+  "accent-1":#00abc9,
+  "accent-2":lighten(#00abc9,10),
+  "accent-3":lighten(#00abc9,20),
+  "accent-4":lighten(#00abc9,30),
+  "accent-5":lighten(#00abc9,40),
+);
+
+$shades: (
+  "black":#000000,
+  "white":#ffffff,
+  "transparent":transparent
+);
+
+$colors : (
+  "monpro": $monpro
+)!default;
+
+@each $color_name, $color in $colors {
+  @each $color_type, $color_value in $color {
+    @if $color_type == "base" {
+      .#{$color_name} {
+        background-color: $color_value !important;
+      }
+      .#{$color_name}-text {
+        color: $color_value !important;
+      }
+    }
+    @else if $color_name != "shades" {
+      .#{$color_name}.#{$color_type} {
+        background-color: $color_value !important;
+      }
+      .#{$color_name}-text.text-#{$color_type} {
+        color: $color_value !important;
+      }
+    }
+  }
+}
+
+// Shade classes
+@each $color, $color_value in $shades {
+  .#{$color} {
+    background-color: $color_value !important;
+  }
+  .#{$color}-text {
+    color: $color_value !important;
+  }
+}

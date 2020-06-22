@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Envoi d'une nouvelle enquête de satisfaction - {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container mb-4">
+        <div class="row">
+            <h1>Envoi d'une nouvelle enquête de satisfaction</h1>
+        </div>
+        <div class="row">
+            {% if formulaire is defined %}
+                {{ form_start(formulaire, { 'attr': { 'class': 'col s12' } }) }}
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">perm_identity</i>
+                        {{ form_widget(formulaire.nomDestinataire, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.nomDestinataire) }}
+                        {{ form_help(formulaire.nomDestinataire) }}
+                        {{ form_errors(formulaire.nomDestinataire) }}
+                    </div>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">perm_identity</i>
+                        {{ form_widget(formulaire.prenomDestinataire, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.prenomDestinataire) }}
+                        {{ form_help(formulaire.prenomDestinataire) }}
+                        {{ form_errors(formulaire.prenomDestinataire) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">alternate_email</i>
+                        {{ form_widget(formulaire.emailDestinataire, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.emailDestinataire) }}
+                        {{ form_help(formulaire.emailDestinataire) }}
+                        {{ form_errors(formulaire.emailDestinataire) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        {{ form_widget(formulaire.entrepriseConcernee, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.entrepriseConcernee) }}
+                        {{ form_help(formulaire.entrepriseConcernee) }}
+                        {{ form_errors(formulaire.entrepriseConcernee) }}
+                    </div>
+                </div>
+                <div class="row">
+                    {{ form_widget(formulaire.submit) }}
+                </div>
+                {{ form_end(formulaire) }}
+            {% endif %}
+        </div>
+        <div class="row mt-4">
+            <a href="{{ path('app_index_index') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>
+        </div>
+    </div>
+{% endblock %}

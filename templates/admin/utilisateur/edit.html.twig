@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Modifier un utilisateur - {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container mb-4">
+        <div class="row">
+            <h3 class="center-align">Modification de l'utilisateur : {% if utilisateur is defined %} {{ utilisateur.email }} {% endif %}</h3>
+        </div>
+        <div class="row">
+            {% if formulaire is defined %}
+                {{ form_start(formulaire, { 'attr': { 'class': 'col s12' } }) }}
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">perm_identity</i>
+                        {{ form_widget(formulaire.nom, { 'attr': { 'class': 'validate' }, 'value': utilisateur.nom }) }}
+                        {{ form_label(formulaire.nom) }}
+                        {{ form_help(formulaire.nom) }}
+                        {{ form_errors(formulaire.nom) }}
+                    </div>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">perm_identity</i>
+                        {{ form_widget(formulaire.prenom, { 'attr': { 'class': 'validate' }, 'value': utilisateur.prenom }) }}
+                        {{ form_label(formulaire.prenom) }}
+                        {{ form_help(formulaire.prenom) }}
+                        {{ form_errors(formulaire.prenom) }}
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">lock</i>
+                        {{ form_widget(formulaire.password, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.password) }}
+                        {{ form_help(formulaire.password) }}
+                        {{ form_errors(formulaire.password) }}
+                    </div>
+                </div>
+                <div class="row">
+                    {{ form_widget(formulaire.submit) }}
+                    <a href="{{ path('app_admin_liste_users') }}" class="btn monpro waves-effect waves-light center">Annuler</a>
+                </div>
+                {{ form_end(formulaire) }}
+            {% endif %}
+        </div>
+        <div class="row mt-4">
+            <a href="{{ path('app_index_admin') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>
+        </div>
+    </div>
+{% endblock %}

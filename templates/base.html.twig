@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE-edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Gestion Avis - MonProCertifié{% endblock %}</title>
+        {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+    </head>
+    <body>
+        {% include('components/header.html.twig') %}
+        <main>
+            <div class="row">
+                {% include('components/flash.html.twig') %}
+            </div>
+            {% block body %}
+                <div class="row">
+                    {% include('components/left-side-layout.html.twig') %}
+                    <div class="col s10 m10 l10">
+                        <h1 class="monpro-text">Bienvenue
+                        {% if app.user %}
+                            {{ app.user.prenom }}
+                        {% endif %}
+                        </h1>
+                    </div>
+                </div>
+            {% endblock %}
+        </main>
+        {% include('components/footer.html.twig') %}
+    </body>
+</html>

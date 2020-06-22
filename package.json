@@ -1,0 +1,13 @@
+{
+  "devDependencies": {
+    "@symfony/webpack-encore": "^0.30.2",
+    "node-sass": "^4.14.1",
+    "sass-loader": "8.0.0",
+    "webpack-notifier": "1.6.0"
+  },
+  "dependencies": {
+    "jquery": "^3.5.1",
+    "material-icons": "^0.3.1",
+    "materialize-css": "^1.0.0"
+  }
+}

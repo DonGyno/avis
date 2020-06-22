@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion au service - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <form class="col l12 m12 s12" method="post">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                {% if app.user %}
+                    <div class="col l12 s12 m12 center-align center-block">
+                        <div class="card monpro lighten-2">
+                            <div class="card-content white-text">
+                                <span class="card-title">Alerte</span>
+                                <p>Bonjour {{ app.user.prenom }} {{ app.user.nom }} !</p>
+                                <p>Tu es déjà connecté avec l'email {{ app.user.email }}</p>
+                                <p>Ce n'est pas toi ?</p>
+                            </div>
+                            <div class="card-action">
+                                <a class="monpro-text text-accent-4" href="{{ path('app_logout') }}">Déconnexion</a>
+                                <a class="monpro-text text-accent-4" href="{{ path('app_index_index') }}">Retour à l'accueil</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <h1 class="title font-weight-normal">Connexion</h1>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+                            <label for="inputEmail">Email</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
+                            <label for="inputPassword" class="sr-only">Mot de passe</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <label>
+                                <input type="checkbox" class="filled-in monpro-text monpro" name="_remember_me">
+                                <span>Se souvenir de moi</span>
+                            </label>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <button class="btn monpro btn-lg btn-primary waves-effect waves-light" type="submit">
+                                Se Connecter !
+                            </button>
+                        </div>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

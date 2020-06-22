@@ -1,0 +1,9 @@
+{% block flash_messages %}
+    {% for label, messages in app.flashes(['success','error']) %}
+        {% for message in messages %}
+            <div class="notifications flash-{{ label }} p-2 center-align">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}

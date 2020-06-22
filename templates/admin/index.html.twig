@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Administration - {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <h1 class="center-align">Administration</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m6 l4">
+                <h3 class="center-align">Entreprises</h3>
+                <div class="row">
+                    <div class="col s12 center-align">
+                        <a href="{{ path('app_admin_entreprise_ajouter') }}" class="btn monpro waves-effect waves-light center mb-2" type="button">Ajouter une nouvelle entreprise</a>
+                        <a href="{{ path('app_admin_liste_entreprises') }}" class="btn monpro waves-effect waves-light center mb-2" type="button">Liste des entreprises</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m6 l4">
+                <h3 class="center-align">Utilisateurs</h3>
+                <div class="row">
+                    <div class="col s12 center-align">
+                        <a href="{{ path('app_admin_inscription') }}" class="btn monpro waves-effect waves-light center mb-2" type="button">Ajouter un nouvel utilisateur</a>
+                        <a href="{{ path('app_admin_liste_users') }}" class="btn monpro waves-effect waves-light center mb-2" type="button">Liste des utilisateurs</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m6 l4">
+                <h3 class="center-align">Formulaire</h3>
+                <div class="row">
+                    <div class="col s12 center-align">
+                        <a href="#" class="btn monpro waves-effect waves-light center mb-2" type="button">Modifier le formulaire de satisfaction</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 mt-4 mb-4">
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 mt-4 mb-4 center-align">
+                <a href="{{ path('app_index_index') }}" class="btn monpro waves-effect waves-light center">Quitter l'administration</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

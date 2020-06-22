@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Ajouter une nouvelle entreprise - {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container mb-4">
+        <div class="row">
+            <h1 class="center-align">Inscription d'une nouvelle entreprise</h1>
+        </div>
+        <div class="row mt-4">
+            {% if formulaire is defined %}
+                {{ form_start(formulaire, { 'attr': { 'class': 'validate' } }) }}
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">business</i>
+                        {{ form_widget(formulaire.nom, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.nom) }}
+                        {{ form_help(formulaire.nom) }}
+                        {{ form_errors(formulaire.nom) }}
+                    </div>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">poll</i>
+                        {{ form_widget(formulaire.raisonSociale, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.raisonSociale) }}
+                        {{ form_help(formulaire.raisonSociale) }}
+                        {{ form_errors(formulaire.raisonSociale) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 m12 l4">
+                        <i class="material-icons prefix">streetview</i>
+                        {{ form_widget(formulaire.adresseRue, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.adresseRue) }}
+                        {{ form_help(formulaire.adresseRue) }}
+                        {{ form_errors(formulaire.adresseRue) }}
+                    </div>
+                    <div class="input-field col s12 m6 l4">
+                        <i class="material-icons prefix">location_city</i>
+                        {{ form_widget(formulaire.adresseVille, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.adresseVille) }}
+                        {{ form_help(formulaire.adresseVille) }}
+                        {{ form_errors(formulaire.adresseVille) }}
+                    </div>
+                    <div class="input-field col s12 m6 l4">
+                        <i class="material-icons prefix">place</i>
+                        {{ form_widget(formulaire.adresseCodePostal, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.adresseCodePostal) }}
+                        {{ form_help(formulaire.adresseCodePostal) }}
+                        {{ form_errors(formulaire.adresseCodePostal) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">local_phone</i>
+                        {{ form_widget(formulaire.telephoneFixe, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.telephoneFixe) }}
+                        {{ form_help(formulaire.telephoneFixe) }}
+                        {{ form_errors(formulaire.telephoneFixe) }}
+                    </div>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">smartphone</i>
+                        {{ form_widget(formulaire.telephonePortable, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.telephonePortable) }}
+                        {{ form_help(formulaire.telephonePortable) }}
+                        {{ form_errors(formulaire.telephonePortable) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">email</i>
+                        {{ form_widget(formulaire.emailContact, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.emailContact) }}
+                        {{ form_help(formulaire.emailContact) }}
+                        {{ form_errors(formulaire.emailContact) }}
+                    </div>
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">query_builder</i>
+                        {{ form_widget(formulaire.horaires, { 'attr': { 'class': 'validate materialize-textarea'} }) }}
+                        {{ form_label(formulaire.horaires) }}
+                        {{ form_help(formulaire.horaires) }}
+                        {{ form_errors(formulaire.horaires) }}
+                    </div>
+                </div>
+                <div class="row">
+                    {{ form_widget(formulaire.submit, { 'label': 'Ajouter l\'entreprise' }) }}
+                </div>
+                {{ form_end(formulaire) }}
+            {% endif %}
+        </div>
+        <div class="row mt-4">
+            <a href="{{ path('app_index_admin') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>
+        </div>
+    </div>
+{% endblock %}

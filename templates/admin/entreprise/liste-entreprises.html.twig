@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Liste Entreprises - {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <h1 class="center-align"> Liste des entreprises</h1>
+            </div>
+        </div>
+        <div class="row mt-3">
+            {% if entreprises is defined %}
+                <table class="highlight centered responsive-table">
+                    <thead>
+                    <tr>
+                        <th>Nom Entreprise</th>
+                        <th>Raison Sociale</th>
+                        <th>Adresse</th>
+                        <th>Email Contact</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for entreprise in entreprises %}
+                        <tr>
+                            <td>{{ entreprise.nom }}</td>
+                            <td>{{ entreprise.raisonSociale }}</td>
+                            <td>{{ entreprise.adresseRue }} {{ entreprise.adresseCodePostal }} {{ entreprise.adresseVille }}</td>
+                            <td>{{ entreprise.emailContact }}</td>
+                            <td>
+                                <a href="{{ path('app_admin_editer_entreprise', {id: entreprise.id}) }}" class="btn-floating monpro"><i class="material-icons large">edit</i></a>
+                                <a href="{{ path('app_admin_supprimer_entreprise', {id: entreprise.id}) }}" class="btn-floating monpro"
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette entreprise ?');"
+                                ><i class="material-icons large">delete</i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+        <div class="row mt-4">
+            <a href="{{ path('app_index_admin') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>
+        </div>
+    </div>
+{% endblock %}
