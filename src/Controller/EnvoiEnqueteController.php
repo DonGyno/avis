@@ -108,7 +108,7 @@ class EnvoiEnqueteController extends AbstractController
         $avis_client = $entityManager->getRepository(Avis::class)->findOneBy(['token_security'=>$token_security,'statut_avis'=>'En attente de réponse']);
         if(!$avis_client)
         {
-            throw new AccessDeniedException();
+            return $this->render('@Twig/Exception/exceptionenquete.html.twig');
         }
         else
         {
