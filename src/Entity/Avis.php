@@ -93,6 +93,16 @@ class Avis
      */
     private $telephone_destinataire;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $nb_relance;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $date_derniere_relance;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -274,6 +284,30 @@ class Avis
     public function setTelephoneDestinataire(?string $telephone_destinataire): self
     {
         $this->telephone_destinataire = $telephone_destinataire;
+
+        return $this;
+    }
+
+    public function getNbRelance(): ?int
+    {
+        return $this->nb_relance;
+    }
+
+    public function setNbRelance(?int $nb_relance): self
+    {
+        $this->nb_relance = $nb_relance;
+
+        return $this;
+    }
+
+    public function getDateDerniereRelance(): ?\DateTimeInterface
+    {
+        return $this->date_derniere_relance;
+    }
+
+    public function setDateDerniereRelance(?\DateTimeInterface $date_derniere_relance): self
+    {
+        $this->date_derniere_relance = $date_derniere_relance;
 
         return $this;
     }

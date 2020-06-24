@@ -14,34 +14,46 @@
                 <table class="highlight centered responsive-table">
                     <thead>
                     <tr>
-                        <th>Nom destinataire</th>
-                        <th>Prénom destinataire</th>
-                        <th>Email destinataire</th>
-                        <th>Entreprise concernée</th>
-                        <th>Statut de l'enquête</th>
-                        <th>Date d'envoi</th>
+                        <th><label><input type="checkbox" name="select_all" class="filled-in" /><span></span></label></th>
+                        <th>Personne</th>
+                        <th>Email</th>
+                        <th>Entreprise</th>
+                        <th>Statut</th>
+                        <th>Date envoi</th>
                         <th>Date réponse</th>
+                        <th>Nb relance</th>
+                        <th>Dernière relance</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for avi in avis %}
                         <tr>
-                            <td>{{ avi.nomDestinataire }}</td>
-                            <td>{{ avi.prenomDestinataire }}</td>
+                            <td><label><input type="checkbox" name="avis[{{ avi.id }}]" class="filled-in" /><span></span></label></td>
+                            <td>{{ avi.nomDestinataire }} {{ avi.prenomDestinataire }}</td>
                             <td>{{ avi.emailDestinataire }}</td>
                             <td>{{ avi.entrepriseConcernee.nom }}</td>
                             <td class="{% if avi.statutAvis == "En attente de réponse" %}waiting{% else %}answered{% endif %}">{{ avi.statutAvis }}</td>
-                            <td>{{ avi.dateEnvoiEnquete|date('d/m/Y') }}</td>
-                            <td>{% if avi.dateReponseEnquete is not null %}{{ avi.dateReponseEnquete|date('d/m/Y') }}{% else %} Pas de réponse {% endif %}</td>
-                            <td></td>
+                            <td>{{ avi.dateEnvoiEnquete|date('d/m/Y H:i',timezone='Europe/Paris') }}</td>
+                            <td>{% if avi.dateReponseEnquete is not null %}{{ avi.dateReponseEnquete|date('d/m/Y H:i',timezone='Europe/Paris') }}{% else %} Pas de réponse {% endif %}</td>
+                            <td>{{ avi.nbRelance }}</td>
+                            <td>{% if avi.dateDerniereRelance is not null %}{{ avi.dateDerniereRelance|date('d/m/Y H:i',timezone='Europe/Paris') }}{% endif %}</td>
+                            <td>
+                                {% if avi.dateReponseEnquete is not null %}
+                                <a href="{{ path('app_voir_avis', {id: avi.id}) }}" class="btn-floating monpro" title="Voir"><i class="material-icons large">visibility</i></a>
+                                {% else %}
+                                <a href="{{ path('app_relance_avis', {id: avi.id}) }}" class="btn-floating monpro" title="Relancer"
+                                   onclick="return confirm('Êtes-vous sûr de vouloir envoyer la relance e-mail ?');"
+                                ><i class="material-icons large">send</i></a>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
             {% endif %}
         </div>
-        <div class="row mt-4">
+        <div class="row mt-4 mb-4">
             <a href="{{ path('app_index_index') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>
         </div>
     </div>
