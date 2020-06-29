@@ -14,7 +14,7 @@
                 <table class="highlight centered responsive-table">
                     <thead>
                     <tr>
-                        <th><label><input type="checkbox" name="select_all" class="filled-in" /><span></span></label></th>
+                        <th><label><input type="checkbox" id="select_all" name="select_all" class="filled-in" /><span></span></label></th>
                         <th>Personne</th>
                         <th>Email</th>
                         <th>Entreprise</th>
@@ -29,7 +29,7 @@
                     <tbody>
                     {% for avi in avis %}
                         <tr>
-                            <td><label><input type="checkbox" name="avis[{{ avi.id }}]" class="filled-in" /><span></span></label></td>
+                            <td><label><input type="checkbox" value="{{ avi.id }}" name="avis[{{ avi.id }}]" class="filled-in" id="avis_{{ avi.id }}" /><span></span></label></td>
                             <td>{{ avi.nomDestinataire }} {{ avi.prenomDestinataire }}</td>
                             <td>{{ avi.emailDestinataire }}</td>
                             <td>{{ avi.entrepriseConcernee.nom }}</td>
@@ -54,6 +54,7 @@
             {% endif %}
         </div>
         <div class="row mt-4 mb-4">
+            <a data-path="{{ path('app_export_avis') }}" class="btn monpro waves-effect waves-light center" id="btn_export">Exporter les avis sélectionnés</a>
             <a href="{{ path('app_index_index') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>
         </div>
     </div>

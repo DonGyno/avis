@@ -9,6 +9,8 @@ use App\Entity\BaseConvert;
 use App\Form\AvisType;
 use App\Form\EnqueteType;
 use App\Repository\AvisRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,6 +19,9 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class EnvoiEnqueteController extends AbstractController
 {
@@ -167,6 +172,7 @@ class EnvoiEnqueteController extends AbstractController
      * @Route("/liste-avis/relance-avis/{id}", name="app_relance_avis")
      * @param $id
      * @param MailerInterface $mailer
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
      */
     public function relanceEmail($id, MailerInterface $mailer)
@@ -203,5 +209,66 @@ class EnvoiEnqueteController extends AbstractController
             $this->addFlash('success','Relance envoyée avec succès !');
             return $this->redirectToRoute('app_liste_avis');
         }
+    }
+
+    /**
+     * @Route("/liste-avis/export", name="app_export_avis")
+     * @param AvisRepository $avisRepository
+     * @param Request $request
+     * @return Response
+     */
+    public function exportAvis(AvisRepository $avisRepository, Request $request)
+    {
+        if($request->isXmlHttpRequest())
+        {
+            $filename = "export_avis.csv";
+            $array_id = $request->request->get('array_id');
+            $avis_export = $avisRepository->exportAvis($array_id);
+            $response = new StreamedResponse();
+            $response->setCallback(function() use ($avis_export){
+                $handle = fopen('php://output','w+');
+
+                fputcsv($handle, array(
+                    'Id',
+                    'Nom',
+                    'Prénom',
+                    'Email',
+                    'Nom Entreprise Concernée',
+                    'Date envoi enquête',
+                    'Date réponse enquête',
+                    'Note Prestation Réalisée',
+                    'Note Professionnalisme Entreprise',
+                    'Note Satisfaction Globale',
+                    'Commentaire/Remarque prestation',
+                    'Souhaite un témoignage vidéo ?',
+                    'Téléphone',
+                ),';');
+
+                foreach ($avis_export as $avis)
+                {
+                    fputcsv($handle, array(
+                        $avis->getId(),
+                        $avis->getNomDestinataire(),
+                        $avis->getPrenomDestinataire(),
+                        $avis->getEmailDestinataire(),
+                        $avis->getEntrepriseConcernee()->getNom(),
+                        'te',
+                        'te',
+                        $avis->getNotePrestationRealisee(),
+                        $avis->getNoteProfessionnalismeEntreprise(),
+                        $avis->getNoteSatisfactionGlobale(),
+                        $avis->getRecommanderCommentaireAEntreprise(),
+                        $avis->getTemoignageVideo(),
+                        $avis->getTelephoneDestinataire(),
+                    ),';');
+                }
+                fclose($handle);
+            });
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Type','text/csv');
+            $response->headers->set('Content-Disposition','attachment; filename='.$filename);
+            return $response;
+        }
+        return $this->render('@Twig/Exception/error403.html.twig');
     }
 }

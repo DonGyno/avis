@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% endblock %}
+
+{% block body %}
+    <div class="container mb-4">
+        <div class="row">
+            <div class="col s12">
+                <h1 class="center-align"> Avis {% if avis is defined %} (Id:{{ avis.id}}) de {{ avis.prenomDestinataire }} {{ avis.nomDestinataire }} {% endif %}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s10 offset-s1">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m10 offset-m1">
+                <div class="card monpro darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title center-align">Avis de {% if avis is defined %} {{ avis.getPrenomDestinataire }} {{ avis.getNomDestinataire }} {% endif %}</span><br/>
+                        <p class="center-align">L'entreprise concernée était : <strong>{{ avis.entrepriseConcernee.nom }}</strong></p>
+                        <p class="center-align">La réponse à l'enquête a été enregistrée le : <strong>{{ avis.dateReponseEnquete|date('d/m/Y',timezone='Europe/Paris') }} à {{ avis.dateReponseEnquete|date('H:i',timezone='Europe/Paris') }}</strong></p>
+                        <br/>
+                        <p class="center-align">La note pour la prestation faite par l'entreprise est de : <strong><span class="{% if avis.notePrestationRealisee < 1.5 %} bas {% elseif avis.notePrestationRealisee > 1.5 and avis.notePrestationRealisee < 3.5 %} moyen {% else %} haut {% endif %}">{{ avis.notePrestationRealisee }} / 5</span></strong></p>
+                        <p class="center-align">La note pour le professionnalisme de l'entreprise est de : <strong><span class="{% if avis.noteProfessionnalismeEntreprise < 1.5 %} bas {% elseif avis.noteProfessionnalismeEntreprise > 1.5 and avis.noteProfessionnalismeEntreprise < 3.5 %} moyen {% else %} haut {% endif %}">{{ avis.noteProfessionnalismeEntreprise }} / 5</span></strong></p>
+                        <p class="center-align">La note pour la satisfaction globale est de : <strong><span class="{% if avis.noteSatisfactionGlobale < 1.5 %} bas {% elseif avis.noteSatisfactionGlobale > 1.5 and avis.noteSatisfactionGlobale < 3.5 %} moyen {% else %} haut {% endif %}">{{ avis.noteSatisfactionGlobale }} / 5</span></strong></p>
+                        <br/>
+                        <p>Le commentaire / la recommandation de la personne concernant l'entreprise : <strong><blockquote>{{ avis.recommanderCommentaireAEntreprise }}</blockquote></strong></p>
+                        <br/>
+                        <p class="center-align">Est-ce que la personne souhaite être contacté pour un témoignage vidéo : <strong>{{ avis.temoignageVideo }}</strong></p>
+                        <p class="center-align">Le numéro de téléphone de la personne : <strong>{% if avis.telephoneDestinataire is not null %}{{ avis.telephoneDestinataire }}{% else %}Pas renseigné{% endif %}</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4 mb-4 center-align">
+            <a href="{{ path('app_liste_avis') }}" class="btn monpro waves-effect waves-light center">Retour aux avis</a>
+        </div>
+    </div>
+{% endblock %}

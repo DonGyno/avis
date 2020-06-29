@@ -30,6 +30,18 @@ class AvisRepository extends ServiceEntityRepository
             ;
     }*/
 
+    public function exportAvis($array_id)
+    {
+        $qb = $this->createQueryBuilder('a');
+         $qb->select('a')
+            ->add('where', $qb->expr()->in('a.id',':array_id'))
+            ->andWhere('a.statut_avis = :statut')
+            ->setParameter('array_id', $array_id)
+            ->setParameter('statut', "Réponse enregistrée")
+            ;
+         return $qb->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Avis[] Returns an array of Avis objects
     //  */
