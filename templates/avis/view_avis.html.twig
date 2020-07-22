@@ -2,6 +2,8 @@
 
 {% block title %} {% endblock %}
 
+{% set globale_note = (avis.notePrestationRealisee + avis.noteProfessionnalismeEntreprise + avis.noteSatisfactionGlobale) / 3 %}
+
 {% block body %}
     <div class="container mb-4">
         <div class="row">
@@ -24,7 +26,8 @@
                         <br/>
                         <p class="center-align">La note pour la prestation faite par l'entreprise est de : <strong><span class="{% if avis.notePrestationRealisee < 1.5 %} bas {% elseif avis.notePrestationRealisee > 1.5 and avis.notePrestationRealisee < 3.5 %} moyen {% else %} haut {% endif %}">{{ avis.notePrestationRealisee }} / 5</span></strong></p>
                         <p class="center-align">La note pour le professionnalisme de l'entreprise est de : <strong><span class="{% if avis.noteProfessionnalismeEntreprise < 1.5 %} bas {% elseif avis.noteProfessionnalismeEntreprise > 1.5 and avis.noteProfessionnalismeEntreprise < 3.5 %} moyen {% else %} haut {% endif %}">{{ avis.noteProfessionnalismeEntreprise }} / 5</span></strong></p>
-                        <p class="center-align">La note pour la satisfaction globale est de : <strong><span class="{% if avis.noteSatisfactionGlobale < 1.5 %} bas {% elseif avis.noteSatisfactionGlobale > 1.5 and avis.noteSatisfactionGlobale < 3.5 %} moyen {% else %} haut {% endif %}">{{ avis.noteSatisfactionGlobale }} / 5</span></strong></p>
+                        <p class="center-align">La note pour la satisfaction globale est de : <strong><span class="{% if avis.noteSatisfactionGlobale < 1.5 %} bas {% elseif avis.noteSatisfactionGlobale > 1.5 and avis.noteSatisfactionGlobale < 3.5 %} moyen {% else %} haut {% endif %}">{{ avis.noteSatisfactionGlobale }} / 5</span></strong></p><br>
+                        <p class="center-align"><strong>La moyenne des 3 notes précédentes est de : <span class="{% if globale_note < 1.5 %} bas {% elseif globale_note > 1.5 and globale_note < 3.5 %} moyen {% else %} haut {% endif %}"> {{ globale_note|number_format(2,',','.')  }} / 5 </span></strong></p>
                         <br/>
                         <p>Le commentaire / la recommandation de la personne concernant l'entreprise : <strong><blockquote>{{ avis.recommanderCommentaireAEntreprise }}</blockquote></strong></p>
                         <br/>

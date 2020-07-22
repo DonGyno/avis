@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -55,6 +57,16 @@ class User implements UserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $derniere_connexion;
+
+    /**
+     * @ORM\OneToMany(targetEntity=FicheProspection::class, mappedBy="responsable_fiche_prospection")
+     */
+    private $fiches_prospection;
+
+    public function __construct()
+    {
+        $this->fiches_prospection = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -160,5 +172,36 @@ class User implements UserInterface
     public function getUsername()
     {
         return $this->getEmail();
+    }
+
+    /**
+     * @return Collection|FicheProspection[]
+     */
+    public function getFichesProspection(): Collection
+    {
+        return $this->fiches_prospection;
+    }
+
+    public function addFichesProspection(FicheProspection $fichesProspection): self
+    {
+        if (!$this->fiches_prospection->contains($fichesProspection)) {
+            $this->fiches_prospection[] = $fichesProspection;
+            $fichesProspection->setResponsableFicheProspection($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFichesProspection(FicheProspection $fichesProspection): self
+    {
+        if ($this->fiches_prospection->contains($fichesProspection)) {
+            $this->fiches_prospection->removeElement($fichesProspection);
+            // set the owning side to null (unless already changed)
+            if ($fichesProspection->getResponsableFicheProspection() === $this) {
+                $fichesProspection->setResponsableFicheProspection(null);
+            }
+        }
+
+        return $this;
     }
 }

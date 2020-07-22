@@ -8,15 +8,17 @@
     "php": "^7.2.5",
     "ext-ctype": "*",
     "ext-iconv": "*",
+    "ext-json": "*",
+    "amphp/http-client": "^4.0@dev",
     "scienta/doctrine-json-functions": "~4.1",
     "sensio/framework-extra-bundle": "^5.5@dev",
+    "symfony/apache-pack": "dev-master",
     "symfony/asset": "*",
     "symfony/console": "*",
     "symfony/dotenv": "*",
     "symfony/expression-language": "*",
     "symfony/flex": "^1.3.1",
     "symfony/form": "5.2.*",
-    "symfony/framework-bundle": "*",
     "symfony/http-client": "*",
     "symfony/intl": "5.2.*",
     "symfony/mailer": "5.2.*",
@@ -33,8 +35,7 @@
     "symfony/validator": "*",
     "symfony/web-link": "*",
     "symfony/webpack-encore-bundle": "dev-master",
-    "symfony/yaml": "*",
-    "ext-json": "*"
+    "symfony/yaml": "*"
   },
   "require-dev": {
     "symfony/debug-pack": "*",

@@ -74,21 +74,28 @@
                 <div class="row mt-4">
                     <div class="input-field col s12">
                         <i class="material-icons prefix">feedback</i>
-                        {{ form_widget(formulaire.recommanderCommentaireAEntreprise, { 'attr': { 'class': 'validate materialize-textarea'} }) }}
+                        {{ form_widget(formulaire.recommanderCommentaireAEntreprise, { 'attr': {'class': 'validate materialize-textarea', 'maxlength':150, 'data-length':150} }) }}
                         {{ form_label(formulaire.recommanderCommentaireAEntreprise) }}
                         {{ form_help(formulaire.recommanderCommentaireAEntreprise) }}
                         {{ form_errors(formulaire.recommanderCommentaireAEntreprise) }}
                     </div>
                 </div>
-                <div class="row flex-end">
+                <div class="row">
                     <div class="input-field col s12 m6 l6">
                         <p class="center-align">{{ form_label(formulaire.temoignageVideo, null, {'label_attr': {'class': 'radio-label'}}) }}</p>
                         <p class="liste_inputs center-align">
                             {% for child in formulaire.temoignageVideo %}
-                                <label>
-                                    {{ form_widget(child, {'attr': {'class': 'with-gap'}}) }}
-                                    <span>{{ form_label(child) }}</span>
-                                </label>
+                                {% if child.vars.value == "Non" %}
+                                    <label>
+                                        {{ form_widget(child, {'attr': {'class': 'with-gap'}, 'checked': true }) }}
+                                        <span>{{ form_label(child) }}</span>
+                                    </label>
+                                {% else %}
+                                    <label>
+                                        {{ form_widget(child, {'attr': {'class': 'with-gap'}}) }}
+                                        <span>{{ form_label(child) }}</span>
+                                    </label>
+                                {% endif %}
                             {% endfor %}
                         </p>
                         {{ form_help(formulaire.temoignageVideo) }}

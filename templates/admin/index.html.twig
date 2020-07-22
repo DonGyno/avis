@@ -29,10 +29,35 @@
                 </div>
             </div>
             <div class="col s12 m6 l4">
-                <h3 class="center-align">Formulaire</h3>
+                <h3 class="center-align">Avis</h3>
                 <div class="row">
                     <div class="col s12 center-align">
-                        <a href="#" class="btn monpro waves-effect waves-light center mb-2" type="button">Modifier le formulaire de satisfaction</a>
+                        <a href="{{ path('app_liste_avis')}}" class="btn monpro waves-effect waves-light center mb-2" type="button">Liste des avis</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 mt-4 mb-4">
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m6 l4">
+                <h3 class="center-align">Messages d'accueil</h3>
+                <div class="row">
+                    <div class="col s12 center-align">
+                        <a href="{{ path('app_admin_message_ajouter') }} " class="btn monpro waves-effect waves-light center mb-2" type="button">Ajouter un nouveau message personnalisé</a>
+                        <a href="{{ path('app_admin_liste_messages') }}" class="btn monpro waves-effect waves-light center mb-2" type="button">Liste des messages personnalisés</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m6 l4">
+                <h3 class="center-align">E-CRM</h3>
+                <div class="row">
+                    <div class="col s12 center-align">
+                        <a href="{{ path('app_add_admin_fiche_prospection') }}" class="btn monpro waves-effect waves-light center mb-2" type="button">Nouvelle fiche de prospection</a>
+                        <a href="#" class="btn monpro waves-effect waves-light center mb-2" type="button">Liste des fiches de prospection</a>
                     </div>
                 </div>
             </div>

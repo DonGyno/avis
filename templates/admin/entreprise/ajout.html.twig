@@ -27,6 +27,22 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">local_activity</i>
+                        {{ form_widget(formulaire.ape, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.ape) }}
+                        {{ form_help(formulaire.ape) }}
+                        {{ form_errors(formulaire.ape) }}
+                    </div>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">policy</i>
+                        {{ form_widget(formulaire.sirenSiret, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.sirenSiret) }}
+                        {{ form_help(formulaire.sirenSiret) }}
+                        {{ form_errors(formulaire.sirenSiret) }}
+                    </div>
+                </div>
+                <div class="row">
                     <div class="input-field col s12 m12 l4">
                         <i class="material-icons prefix">streetview</i>
                         {{ form_widget(formulaire.adresseRue, { 'attr': { 'class': 'validate' } }) }}

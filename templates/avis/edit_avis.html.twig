@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Edition Avis - {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container mb-4">
+        <div class="row">
+            <div class="col s12">
+                <h1 class="center-align"> Edition de l'avis n°{% if avis is defined %}{{ avis.id }} fait par {{ avis.prenomDestinataire }} {{ avis.nomDestinataire }}{% endif %}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="row mt-3">
+                {% if formulaire is defined %}
+                    {{ form_start(formulaire, { 'attr': { 'class': 'col s12' } }) }}
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <p class="center-align">{{ form_label(formulaire.notePrestationRealisee, null, {'label_attr': {'class': 'radio-label'}}) }}</p>
+                            <p class="liste_inputs center-align">
+                                {% for child in formulaire.notePrestationRealisee %}
+                                    {% if child.vars.value == avis.notePrestationRealisee %}
+                                        <label>
+                                            {{ form_widget(child, {'attr': {'class': 'with-gap'}, 'checked': true }) }}
+                                            <span>{{ form_label(child) }}</span>
+                                        </label>
+                                    {% else %}
+                                        <label>
+                                            {{ form_widget(child, {'attr': {'class': 'with-gap'}}) }}
+                                            <span>{{ form_label(child) }}</span>
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                            {{ form_help(formulaire.notePrestationRealisee) }}
+                            {{ form_errors(formulaire.notePrestationRealisee) }}
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <p class="center-align">{{ form_label(formulaire.noteProfessionnalismeEntreprise, null, {'label_attr': {'class': 'radio-label'}}) }}</p>
+                            <p class="liste_inputs center-align">
+                                {% for child in formulaire.noteProfessionnalismeEntreprise %}
+                                    {% if child.vars.value == avis.noteProfessionnalismeEntreprise %}
+                                        <label>
+                                            {{ form_widget(child, {'attr': {'class': 'with-gap'}, 'checked': true }) }}
+                                            <span>{{ form_label(child) }}</span>
+                                        </label>
+                                    {% else %}
+                                        <label>
+                                            {{ form_widget(child, {'attr': {'class': 'with-gap'}}) }}
+                                            <span>{{ form_label(child) }}</span>
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                            {{ form_help(formulaire.noteProfessionnalismeEntreprise) }}
+                            {{ form_errors(formulaire.noteProfessionnalismeEntreprise) }}
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <p class="center-align">{{ form_label(formulaire.noteSatisfactionGlobale, null, {'label_attr': {'class': 'radio-label'}}) }}</p>
+                            <p class="liste_inputs center-align">
+                                {% for child in formulaire.noteSatisfactionGlobale %}
+                                    {% if child.vars.value == avis.noteSatisfactionGlobale %}
+                                        <label>
+                                            {{ form_widget(child, {'attr': {'class': 'with-gap'}, 'checked': true }) }}
+                                            <span>{{ form_label(child) }}</span>
+                                        </label>
+                                    {% else %}
+                                        <label>
+                                            {{ form_widget(child, {'attr': {'class': 'with-gap'}}) }}
+                                            <span>{{ form_label(child) }}</span>
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                            {{ form_help(formulaire.noteSatisfactionGlobale) }}
+                            {{ form_errors(formulaire.noteSatisfactionGlobale) }}
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row mt-4">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">feedback</i>
+                            {{ form_widget(formulaire.recommanderCommentaireAEntreprise, { 'attr': { 'class': 'validate materialize-textarea'}, 'value': avis.recommanderCommentaireAEntreprise }) }}
+                            {{ form_label(formulaire.recommanderCommentaireAEntreprise) }}
+                            {{ form_help(formulaire.recommanderCommentaireAEntreprise) }}
+                            {{ form_errors(formulaire.recommanderCommentaireAEntreprise) }}
+                        </div>
+                    </div>
+                    <div class="row flex-end">
+                        <div class="input-field col s12 m6 l6">
+                            <p class="center-align">{{ form_label(formulaire.temoignageVideo, null, {'label_attr': {'class': 'radio-label'}}) }}</p>
+                            <p class="liste_inputs center-align">
+                                {% for child in formulaire.temoignageVideo %}
+                                    {% if child.vars.value == avis.temoignageVideo %}
+                                        <label>
+                                            {{ form_widget(child, {'attr': {'class': 'with-gap'}, 'checked': true }) }}
+                                            <span>{{ form_label(child) }}</span>
+                                        </label>
+                                    {% else %}
+                                        <label>
+                                            {{ form_widget(child, {'attr': {'class': 'with-gap'}}) }}
+                                            <span>{{ form_label(child) }}</span>
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                            {{ form_help(formulaire.temoignageVideo) }}
+                            {{ form_errors(formulaire.temoignageVideo) }}
+                        </div>
+                        <div class="input-field col s12 m6 l6">
+                            <i class="material-icons prefix">phone</i>
+                            {{ form_widget(formulaire.telephoneDestinataire, { 'attr': { 'class': 'validate materialize-textarea'}, 'value': avis.telephoneDestinataire }) }}
+                            {{ form_label(formulaire.telephoneDestinataire) }}
+                            {{ form_help(formulaire.telephoneDestinataire) }}
+                            {{ form_errors(formulaire.telephoneDestinataire) }}
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row mt-4 mb-4 center-align">
+                        {{ form_widget(formulaire.submit) }}
+                        <a href="{{ path('app_liste_avis') }}" class="btn monpro waves-effect waves-light center">Annuler</a>
+                    </div>
+                    {{ form_end(formulaire) }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

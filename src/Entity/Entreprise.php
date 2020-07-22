@@ -69,6 +69,16 @@ class Entreprise
      */
     private $avis;
 
+    /**
+     * @ORM\Column(type="string", length=200, nullable=true)
+     */
+    private $ape;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $siren_siret;
+
     public function __construct()
     {
         $this->avis = new ArrayCollection();
@@ -214,6 +224,30 @@ class Entreprise
                 $avi->setEntrepriseConcernee(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getApe(): ?string
+    {
+        return $this->ape;
+    }
+
+    public function setApe(?string $ape): self
+    {
+        $this->ape = $ape;
+
+        return $this;
+    }
+
+    public function getSirenSiret(): ?string
+    {
+        return $this->siren_siret;
+    }
+
+    public function setSirenSiret(?string $siren_siret): self
+    {
+        $this->siren_siret = $siren_siret;
 
         return $this;
     }

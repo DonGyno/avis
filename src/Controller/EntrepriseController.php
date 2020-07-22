@@ -90,6 +90,8 @@ class EntrepriseController extends AbstractController
             $entreprise->setTelephonePortable($form->get('telephonePortable')->getData());
             $entreprise->setEmailContact($form->get('emailContact')->getData());
             $entreprise->setHoraires($form->get('horaires')->getData());
+            $entreprise->setApe($form->get('ape')->getData());
+            $entreprise->setSirenSiret($form->get('sirenSiret')->getData());
             $em->persist($entreprise);
             $em->flush();
             $errors = $validator->validate($entreprise);

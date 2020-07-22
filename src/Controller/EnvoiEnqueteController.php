@@ -5,12 +5,15 @@ namespace App\Controller;
 
 
 use App\Entity\Avis;
+use App\Entity\AvisExportDumpCSV;
 use App\Entity\BaseConvert;
+use App\Form\AvisEditType;
 use App\Form\AvisType;
 use App\Form\EnqueteType;
 use App\Repository\AvisRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,7 +35,7 @@ class EnvoiEnqueteController extends AbstractController
      * @param ValidatorInterface $validator
      * @param MailerInterface $mailer
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function formulaireEnvoiEnquete(Request $request,ValidatorInterface $validator, MailerInterface $mailer)
     {
@@ -105,9 +108,11 @@ class EnvoiEnqueteController extends AbstractController
      * @param $token_security
      * @param Request $request
      * @param ValidatorInterface $validator
+     * @param MailerInterface $mailer
      * @return Response
+     * @throws TransportExceptionInterface
      */
-    public function repondreEnquete($token_security, Request $request, ValidatorInterface $validator)
+    public function repondreEnquete($token_security, Request $request, ValidatorInterface $validator, MailerInterface $mailer)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $avis_client = $entityManager->getRepository(Avis::class)->findOneBy(['token_security'=>$token_security,'statut_avis'=>'En attente de réponse']);
@@ -142,6 +147,36 @@ class EnvoiEnqueteController extends AbstractController
                 else
                 {
                     $this->addFlash('success','Merci d\'avoir répondu à notre enquête ! Vous pouvez désormais quitter la page');
+                    $email_admin = (new TemplatedEmail())
+                        ->from('avis@monprocertifie.fr')
+                        ->to('aleksandra@monprocertifie.fr')
+                        ->subject('Réponse d\'une enquête de satisfaction')
+                        ->htmlTemplate('emails/admin.html.twig')
+                        ->context([
+                            'nomDestinaire'=>$avis_client->getNomDestinataire(),
+                            'prenomDestinaire'=>$avis_client->getPrenomDestinataire(),
+                            'emailDestinataire'=>$avis_client->getEmailDestinataire(),
+                            'nomEntreprise'=>$avis_client->getEntrepriseConcernee()->getNom(),
+                            'date_reponse'=>$avis_client->getDateReponseEnquete()
+                        ])
+                    ;
+                    $mailer->send($email_admin);
+
+                    $email_client = (new TemplatedEmail())
+                        ->from('avis@monprocertifie.fr')
+                        ->to($avis_client->getEmailDestinataire())
+                        ->subject('Enquête de satisfaction - Merci !')
+                        ->htmlTemplate('emails/merci.html.twig')
+                        ->context([
+                            'nomDestinaire'=>$avis_client->getNomDestinataire(),
+                            'prenomDestinaire'=>$avis_client->getPrenomDestinataire(),
+                            'emailDestinataire'=>$avis_client->getEmailDestinataire(),
+                            'nomEntreprise'=>$avis_client->getEntrepriseConcernee()->getNom(),
+                            'date_reponse'=>$avis_client->getDateReponseEnquete()
+                        ])
+                    ;
+                    $mailer->send($email_client);
+
                 }
             }
             return $this->render('avis/formulaire_enquete.html.twig', ['avis'=>$avis_client,'formulaire'=>$form->createView()]);
@@ -169,11 +204,58 @@ class EnvoiEnqueteController extends AbstractController
     }
 
     /**
+     * @Route("/liste-avis/avis/editer/{id}", name="app_edition_avis")
+     * @param $id
+     * @param Request $request
+     * @param ValidatorInterface $validator
+     * @return Response
+     */
+    public function editionAvis($id, Request $request, ValidatorInterface $validator)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $avis_client = $entityManager->getRepository(Avis::class)->find($id);
+        if(!$avis_client)
+        {
+            $this->addFlash('error','Aucun avis trouvé avec cet identifiant !');
+            $this->redirectToRoute('app_liste_avis');
+        }
+        else
+        {
+            $form = $this->createForm(AvisEditType::class);
+            $form->handleRequest($request);
+            if($form->isSubmitted() && $form->isValid())
+            {
+                $avis_client->setNotePrestationRealisee($form->get('notePrestationRealisee')->getData());
+                $avis_client->setNoteProfessionnalismeEntreprise($form->get('noteProfessionnalismeEntreprise')->getData());
+                $avis_client->setNoteSatisfactionGlobale($form->get('noteSatisfactionGlobale')->getData());
+                $avis_client->setRecommanderCommentaireAEntreprise($form->get('recommanderCommentaireAEntreprise')->getData());
+                $avis_client->setTemoignageVideo($form->get('temoignageVideo')->getData());
+                $avis_client->setTelephoneDestinataire($form->get('telephoneDestinataire')->getData());
+
+                $entityManager->persist($avis_client);
+                $entityManager->flush();
+
+                $errors = $validator->validate($avis_client);
+                if(count($errors)>0)
+                {
+                    $this->addFlash('error','Une erreur est survenue !');
+                }
+                else
+                {
+                    $this->addFlash('success','L\'avis a bien été modifié !');
+                    return $this->redirectToRoute('app_liste_avis');
+                }
+            }
+            return $this->render('avis/edit_avis.html.twig', ['avis'=>$avis_client,'formulaire'=>$form->createView()]);
+        }
+    }
+
+    /**
      * @Route("/liste-avis/relance-avis/{id}", name="app_relance_avis")
      * @param $id
      * @param MailerInterface $mailer
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function relanceEmail($id, MailerInterface $mailer)
     {
@@ -221,52 +303,19 @@ class EnvoiEnqueteController extends AbstractController
     {
         if($request->isXmlHttpRequest())
         {
-            $filename = "export_avis.csv";
+
             $array_id = $request->request->get('array_id');
             $avis_export = $avisRepository->exportAvis($array_id);
-            $response = new StreamedResponse();
-            $response->setCallback(function() use ($avis_export){
-                $handle = fopen('php://output','w+');
 
-                fputcsv($handle, array(
-                    'Id',
-                    'Nom',
-                    'Prénom',
-                    'Email',
-                    'Nom Entreprise Concernée',
-                    'Date envoi enquête',
-                    'Date réponse enquête',
-                    'Note Prestation Réalisée',
-                    'Note Professionnalisme Entreprise',
-                    'Note Satisfaction Globale',
-                    'Commentaire/Remarque prestation',
-                    'Souhaite un témoignage vidéo ?',
-                    'Téléphone',
-                ),';');
+            $dumper = new AvisExportDumpCSV();
+            $response = new Response($dumper->dump($avis_export));
 
-                foreach ($avis_export as $avis)
-                {
-                    fputcsv($handle, array(
-                        $avis->getId(),
-                        $avis->getNomDestinataire(),
-                        $avis->getPrenomDestinataire(),
-                        $avis->getEmailDestinataire(),
-                        $avis->getEntrepriseConcernee()->getNom(),
-                        'te',
-                        'te',
-                        $avis->getNotePrestationRealisee(),
-                        $avis->getNoteProfessionnalismeEntreprise(),
-                        $avis->getNoteSatisfactionGlobale(),
-                        $avis->getRecommanderCommentaireAEntreprise(),
-                        $avis->getTemoignageVideo(),
-                        $avis->getTelephoneDestinataire(),
-                    ),';');
-                }
-                fclose($handle);
-            });
-            $response->setStatusCode(200);
-            $response->headers->set('Content-Type','text/csv');
-            $response->headers->set('Content-Disposition','attachment; filename='.$filename);
+            // file prefix was injected
+            $outFileName = 'export_avis_' . date('Ymd') . '.' . $dumper->getFileExtension();
+
+            $response->headers->set('Content-Type', $dumper->getContentType());
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"',$outFileName));
+
             return $response;
         }
         return $this->render('@Twig/Exception/error403.html.twig');
