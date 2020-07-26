@@ -79,6 +79,39 @@ class Entreprise
      */
     private $siren_siret;
 
+    /**
+     * @ORM\Column(type="string", length=200, nullable=true)
+     */
+    private $slug;
+
+    public function slugify($text)
+    {
+        // replace non letter or digits by -
+        $text = preg_replace('#[^\\pL\d]+#u', '-', $text);
+
+        // trim
+        $text = trim($text, '-');
+
+        // transliterate
+        if (function_exists('iconv'))
+        {
+            $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        }
+
+        // lowercase
+        $text = strtolower($text);
+
+        // remove unwanted characters
+        $text = preg_replace('#[^-\w]+#', '', $text);
+
+        if (empty($text))
+        {
+            return 'n-a';
+        }
+
+        return $text;
+    }
+
     public function __construct()
     {
         $this->avis = new ArrayCollection();
@@ -97,6 +130,8 @@ class Entreprise
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
+
+        $this->setSlug($this->nom);
 
         return $this;
     }
@@ -251,4 +286,17 @@ class Entreprise
 
         return $this;
     }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $this->slugify($slug);
+
+        return $this;
+    }
+
 }

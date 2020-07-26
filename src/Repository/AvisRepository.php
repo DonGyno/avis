@@ -14,9 +14,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AvisRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, Avis::class);
+        parent::__construct($managerRegistry, Avis::class);
     }
 
     /*public function findAllAvecEntreprise()

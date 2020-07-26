@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Modifier une fiche de prospection - {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container mb-4">
+        <div class="row">
+            <h1 class="center-align">Modification de la fiche de prospection : {% if fiche is defined %} {{ fiche.nomEntreprise }} {% endif %}</h1>
+        </div>
+        <div class="row mt-4">
+            {% if formulaire is defined %}
+                {{ form_start(formulaire, { 'attr': { 'class': 'validate' } }) }}
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">business</i>
+                        {{ form_widget(formulaire.nomEntreprise, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.nomEntreprise) }}
+                        {{ form_help(formulaire.nomEntreprise) }}
+                        {{ form_errors(formulaire.nomEntreprise) }}
+                    </div>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">poll</i>
+                        {{ form_widget(formulaire.raisonSocialeEntreprise, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.raisonSocialeEntreprise) }}
+                        {{ form_help(formulaire.raisonSocialeEntreprise) }}
+                        {{ form_errors(formulaire.raisonSocialeEntreprise) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">local_activity</i>
+                        {{ form_widget(formulaire.codeApe, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.codeApe) }}
+                        {{ form_help(formulaire.codeApe) }}
+                        {{ form_errors(formulaire.codeApe) }}
+                    </div>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">policy</i>
+                        {{ form_widget(formulaire.siretSiren, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.siretSiren) }}
+                        {{ form_help(formulaire.siretSiren) }}
+                        {{ form_errors(formulaire.siretSiren) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 m12 l4">
+                        <i class="material-icons prefix">streetview</i>
+                        {{ form_widget(formulaire.rueEntreprise, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.rueEntreprise) }}
+                        {{ form_help(formulaire.rueEntreprise) }}
+                        {{ form_errors(formulaire.rueEntreprise) }}
+                    </div>
+                    <div class="input-field col s12 m6 l4">
+                        <i class="material-icons prefix">location_city</i>
+                        {{ form_widget(formulaire.villeEntreprise, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.villeEntreprise) }}
+                        {{ form_help(formulaire.villeEntreprise) }}
+                        {{ form_errors(formulaire.villeEntreprise) }}
+                    </div>
+                    <div class="input-field col s12 m6 l4">
+                        <i class="material-icons prefix">place</i>
+                        {{ form_widget(formulaire.codePostalEntreprise, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.codePostalEntreprise) }}
+                        {{ form_help(formulaire.codePostalEntreprise) }}
+                        {{ form_errors(formulaire.codePostalEntreprise) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">local_phone</i>
+                        {{ form_widget(formulaire.telephoneFixeEntreprise, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.telephoneFixeEntreprise) }}
+                        {{ form_help(formulaire.telephoneFixeEntreprise) }}
+                        {{ form_errors(formulaire.telephoneFixeEntreprise) }}
+                    </div>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">smartphone</i>
+                        {{ form_widget(formulaire.telephonePortableEntreprise, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.telephonePortableEntreprise) }}
+                        {{ form_help(formulaire.telephonePortableEntreprise) }}
+                        {{ form_errors(formulaire.telephonePortableEntreprise) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">email</i>
+                        {{ form_widget(formulaire.emailEntreprise, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.emailEntreprise) }}
+                        {{ form_help(formulaire.emailEntreprise) }}
+                        {{ form_errors(formulaire.emailEntreprise) }}
+                    </div>
+                </div>
+                <div class="row">
+                    {{ form_widget(formulaire.submit, { 'label': 'Modifier la fiche de prospection' }) }}
+                    <a href="{{ path('app_user_liste_fiche_prospection') }}" class="btn monpro waves-effect waves-light center">Annuler</a>
+                </div>
+                {{ form_end(formulaire) }}
+            {% endif %}
+        </div>
+        <div class="row mt-4 mb-4">
+            <a href="{{ path('app_index_index') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>
+        </div>
+    </div>
+{% endblock %}

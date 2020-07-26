@@ -8,11 +8,13 @@ use App\Form\AdminEditUserType;
 use App\Repository\UserRepository;
 use App\Form\AdminInscriptionType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AdminController extends AbstractController
@@ -130,5 +132,20 @@ class AdminController extends AbstractController
             $this->addFlash('success','Utilisateur supprimé avec succès !');
             return $this->redirectToRoute('app_admin_liste_users');
         }
+    }
+
+    /**
+     * @Route("/admin/utilisateurs", name="app_admin_get_users")
+     * @param UserRepository $userRepository
+     * @param SerializerInterface $serializer
+     * @return Response
+     */
+    public function getAllUser(UserRepository $userRepository, SerializerInterface $serializer)
+    {
+        $users = $userRepository->findAll();
+        $jsonContent = $serializer->serialize($users,'json',['circular_reference_handler'=>function($object){
+            return $object->getId();
+        }]);
+        return new JsonResponse(array('users'=>$jsonContent));
     }
 }

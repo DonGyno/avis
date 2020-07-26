@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Entreprise;
 use App\Form\EntrepriseType;
+use App\Repository\AvisRepository;
 use App\Repository\EntrepriseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -77,7 +78,7 @@ class EntrepriseController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $entreprise = $em->getRepository(Entreprise::class)->find($id);
-        $form = $this->createForm(EntrepriseType::class);
+        $form = $this->createForm(EntrepriseType::class,$entreprise);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {
@@ -126,6 +127,25 @@ class EntrepriseController extends AbstractController
             $entityManager->flush();
             $this->addFlash('success','Entreprise supprimée avec succès !');
             return $this->redirectToRoute('app_admin_liste_entreprises');
+        }
+    }
+
+    /**
+     * @Route("/avis-client-{id}-{nom}", name="app_view_entreprise")
+     * @return Response
+     */
+    public function viewEntreprise($id, AvisRepository $avisRepository)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entreprise = $em->getRepository(Entreprise::class)->find($id);
+        $avis = $avisRepository->findBy(['entreprise_concernee'=>$entreprise->getId()]);
+        if(!$entreprise)
+        {
+            return $this->render('@Twig/Exception/error404.html.twig');
+        }
+        else
+        {
+            return $this->render('entreprise/view_entreprise.html.twig',['entreprise'=>$entreprise,'avis'=>$avis]);
         }
     }
 }

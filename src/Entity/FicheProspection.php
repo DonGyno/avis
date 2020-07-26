@@ -82,6 +82,11 @@ class FicheProspection
      */
     private $date_creation;
 
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $statut;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -239,6 +244,18 @@ class FicheProspection
     public function setDateCreation(?\DateTimeInterface $date_creation): self
     {
         $this->date_creation = $date_creation;
+
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?string $statut): self
+    {
+        $this->statut = $statut;
 
         return $this;
     }
