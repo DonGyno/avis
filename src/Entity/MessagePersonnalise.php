@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MessagePersonnaliseRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,6 +28,16 @@ class MessagePersonnalise
      * @ORM\Column(type="text", nullable=true)
      */
     private $contenu;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="messages")
+     */
+    private $messages_user;
+
+    public function __construct()
+    {
+        $this->messages_user = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -52,6 +64,34 @@ class MessagePersonnalise
     public function setContenu(?string $contenu): self
     {
         $this->contenu = $contenu;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getMessagesUser(): Collection
+    {
+        return $this->messages_user;
+    }
+
+    public function addMessagesUser(User $messagesUser): self
+    {
+        if (!$this->messages_user->contains($messagesUser)) {
+            $this->messages_user[] = $messagesUser;
+            $messagesUser->addMessage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessagesUser(User $messagesUser): self
+    {
+        if ($this->messages_user->contains($messagesUser)) {
+            $this->messages_user->removeElement($messagesUser);
+            $messagesUser->removeMessage($this);
+        }
 
         return $this;
     }

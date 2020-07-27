@@ -3,9 +3,13 @@
 {% block title %} Avis Client de {{ entreprise.nom }} {% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container mb-4">
         <div class="row">
             <h1 class="center-align">Avis clients de l'entreprise {{ entreprise.nom }}</h1>
+            {{ dump(avis) }}
+        </div>
+        <div class="row">
+            <img class="responsive-img center-block" src="{{ asset('img/mesure-habitat.jpeg') }}"  alt="fond_ecran"/>
         </div>
     </div>
 {% endblock %}

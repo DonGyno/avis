@@ -3,7 +3,7 @@
 {% block title %} Liste Avis - {{ parent() }} {% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container mb-4">
         <div class="row">
             <div class="col s12">
                 <h1 class="center-align"> Liste des avis</h1>
@@ -58,7 +58,7 @@
         </div>
         <div class="row mt-4 mb-4">
             <a data-path="{{ path('app_export_avis') }}" class="btn monpro waves-effect waves-light center" id="btn_export">Exporter les avis sélectionnés</a>
-            <a href="{{ path('app_index_index') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>
+            <a href="{{ path('app_index_admin') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>
         </div>
     </div>
 {% endblock %}

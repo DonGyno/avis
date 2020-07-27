@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Liste Messages - {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <h1 class="center-align"> Liste des messages personnalisés</h1>
+            </div>
+        </div>
+        <div class="row mt-3">
+            {% if messages is defined %}
+                <table class="highlight centered responsive-table">
+                    <thead>
+                    <tr>
+                        <th>Titre message</th>
+                        <th>Contenu message</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for message in messages %}
+                        <tr>
+                            <td>{{ message.titre }}</td>
+                            <td>{{ message.contenu }}</td>
+                            <td>
+                                <a href="{{ path('app_admin_message_editer', {id: message.id}) }}" class="btn-floating monpro"><i class="material-icons large">edit</i></a>
+                                <a href="{{ path('app_admin_supprimer_message', {id: message.id}) }}" class="btn-floating monpro"
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?');"
+                                ><i class="material-icons large">delete</i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+        <div class="row mt-4 mb-4">
+            <a href="{{ path('app_index_admin') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>
+        </div>
+    </div>
+{% endblock %}
