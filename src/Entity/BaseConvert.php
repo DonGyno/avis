@@ -25,11 +25,11 @@ class BaseConvert {
         $level = 0;
         $result = '';
         $value = trim((string)$value, "\r\n\t +");
-        $signe = ($value{0} === '-') ? '-' : '';
+        $signe = ($value[0] === '-') ? '-' : '';
         $value = ltrim($value, '-0');
         $len = strlen($value);
         for ($i = 0; $i < $len; $i++) {
-            $newValue = strpos($inDigits, $value{$len - 1 - $i});
+            $newValue = strpos($inDigits, $value[$len - 1 - $i]);
             if ($newValue === false)
                 throw new \Exception('Bad Char in input 1', E_USER_ERROR);
             if ($newValue >= $inBase)
@@ -44,7 +44,7 @@ class BaseConvert {
             $factor = bcpow($outBase, $i);
             $number = bcdiv($decimal, $factor, 0);
             $decimal = bcmod($decimal, $factor);
-            $result .= $outDigits{$number};
+            $result .= $outDigits[$number];
         }
         $result = empty($result) ? '0' : $result;
         return ($signe.$result);

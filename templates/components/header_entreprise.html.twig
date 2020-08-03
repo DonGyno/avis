@@ -1,0 +1,16 @@
+<header>
+    <nav>
+        <div class="nav-wrapper monpro">
+            <span class="h2 left-align hide-on-med-and-down">
+                {% if titre_header is defined and titre_header.valueParametre is not null %}
+                    {{ titre_header.valueParametre }}
+                {% else %}
+                    Système de gestion des avis
+                {% endif %}
+            </span>
+            <a href="#" class="brand-logo center">
+                <img src="{{ asset('img/monprocertifie-fond_blanc.png') }}" alt="Logo" />
+            </a>
+        </div>
+    </nav>
+</header>

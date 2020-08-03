@@ -1,4 +1,7 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_entreprise.html.twig' %}
+
+{% set currentPath = path(app.request.attributes.get('_route'),
+    app.request.attributes.get('_route_params')) %}
 
 {% block title %} Avis Client de {{ entreprise.nom }} {% endblock %}
 
@@ -6,10 +9,136 @@
     <div class="container mb-4">
         <div class="row">
             <h1 class="center-align">Avis clients de l'entreprise {{ entreprise.nom }}</h1>
-            {{ dump(avis) }}
         </div>
-        <div class="row">
-            <img class="responsive-img center-block" src="{{ asset('img/mesure-habitat.jpeg') }}"  alt="fond_ecran"/>
+
+        <div class="row custom-flex">
+            <div class="col s12 m6 l6">
+                <img class="responsive-img center-block z-depth-2" src="{{ asset('img/membre-certifie-2020.jpg') }}"  alt="Entreprise Membre du réseau local MonProCertifie"/>
+            </div>
+            <div class="col s12 m6 l6">
+                <div class="card large logo-entreprise">
+                    <div class="card-image">
+                        <img class="responsive-img center-block" src="{% if entreprise.logo is not empty %}{{ asset('uploads/entreprises/logo/') ~ entreprise.logo }}{% else %} {{ asset('img/gris.png')}} {% endif %}" alt="Logo de l'entreprise {{ entreprise.nom }}">
+                        <a href="#infos_procedure" class="btn-floating halfway-fab waves-effect waves-light monpro btn-large pulse modal-trigger"><i class="material-icons">info</i></a>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title h4">Notation des clients</span>
+                        <h5>
+                            <strong>
+                                {% if avis is defined and avis is not null and avis is not empty %}
+                                    {% set moyenne_globale = 0 %}
+                                    {% for avi in avis %}
+                                        {% set moyenne_globale = moyenne_globale + ((avi.notePrestationRealisee + avi.noteProfessionnalismeEntreprise + avi.noteSatisfactionGlobale) / 3) %}
+                                    {% endfor %}
+                                    {% set moyenne_globale = moyenne_globale / avis|length %}
+                                   {{ moyenne_globale|number_format(2, '.', ',') }} / 5 ({{ avis|length }} avis {% if avis|length > 1 %} controlés) {% else %} controlé) {% endif %}
+                                {% else %}
+                                    Cette société ne possède pas encore d'avis enregistrés dans nos archives
+                                {% endif %}
+                            </strong>
+                        </h5>
+                        <script type="application/ld+json">
+                            {
+                                "@context": "https://schema.org",
+                                "@id": "{{ currentPath }}",
+                                "@type": "LocalBusiness",
+                                "additionnalType": "Entreprise de construction ou rénovation",
+                                "name": "{{ entreprise.nom }}",
+                                "legalname": "{{ entreprise.nom }} {{ entreprise.raisonSociale }}",
+                                "description": "",
+                                "email": "{{ entreprise.emailContact }}",
+                                "telephone": "{{ entreprise.telephoneFixe }}",
+                                "url": "{{ currentPath }}",
+                                "image": "{{ asset('uploads/entreprises/logo/') ~ entreprise.logo }}",
+                                "logo": "{{ asset('uploads/entreprises/logo/') ~ entreprise.logo }}",
+                                "address": {
+                                    "@type": "PostalAddress",
+                                    "addressLocality": "{{ entreprise.adresseVille }}",
+                                    "addressCountry": "France",
+                                    "postalCode": "{{ entreprise.adresseCodePostal }}",
+                                    "streetAddress": "{{ entreprise.adresseRue }}"
+                                },
+                                "areaServed": "France, FR",
+                                "priceRange": "EUR",
+                                "aggregateRating": {
+                                    "@type": "AggregateRating",
+                                    "ratingValue": "{{ moyenne_globale|number_format(2, '.', ',') }}",
+                                    "ratingCount": "{{ avis|length }}",
+                                    "bestRating": "5",
+                                    "worstRating": "0"
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row lightbackground">
+        <div class="container mb-4">
+            <div class="row">
+                <div class="col s12 m12 l12 mt-4 mb-2">
+                    <h3 class="center-align">Liste des avis clients</h3>
+                </div>
+                {% if avis is defined and avis is not null and avis is not empty %}
+                    {% for avi in avis %}
+                        <div class="col s12 m6 l6 center-block z-depth-1">
+                            {% set moyenne_avis = (avi.noteSatisfactionGlobale + avi.noteProfessionnalismeEntreprise + avi.notePrestationRealisee) / 3 %}
+                            <p class="rating center-block">{{ moyenne_avis|number_format(2, '.', ',') }}</p>
+                            <p class="value_avis center-align"><strong> {{ moyenne_avis|number_format(2, '.', ',') }} / 5 </strong></p>
+                            <p class="value_entreprise center-align">Entreprise concernée : <strong>{{ avi.entrepriseConcernee.nom }}</strong></p>
+                            <p class="value_entreprise center-align">Prestations : <strong>{#{% if avi.prestations is not defined and avi.prestations is not empty  %} {{ avi.prestations }} {% else %}#} Non renseigné {#{% endif %}#}</strong></p>
+                            <p class="value_commentaire center-align">Commentaire : <strong>{{ avi.recommanderCommentaireAEntreprise }}</strong></p>
+                            <p class="value_personne center-align"><strong>{{ avi.prenomDestinataire }} {{ avi.nomDestinataire }}</strong></p>
+                        </div>
+                    <script type="application/ld+json">
+                        {
+                            "@context": "https://schema.org",
+                            "@type": "Review",
+                            "itemReviewed": {
+                                "@type": "LocalBusiness",
+                                "name": "{{ entreprise.nom }}",
+                                "telephone": "{{ entreprise.telephoneFixe }}",
+                                "image": "{{ asset('uploads/entreprises/logo/') ~ entreprise.logo }}",
+                                "address": {
+                                    "@type": "PostalAddress",
+                                    "addressLocality": "{{ entreprise.adresseVille }}",
+                                    "addressCountry": "France",
+                                    "postalCode": "{{ entreprise.adresseCodePostal }}",
+                                    "streetAddress": "{{ entreprise.adresseRue }}"
+                                },
+                                "priceRange": "EUR"
+                            },
+                            "reviewRating": {
+                                    "@type": "Rating",
+                                    "ratingValue": "{{ moyenne_avis|number_format(2, '.', ',') }}"
+                                },
+                            "author": {
+                                    "@type": "Person",
+                                    "name": "{{ avi.prenomDestinataire }} {{ avi.nomDestinataire }}"
+                                },
+                            "reviewBody": "{{ avi.recommanderCommentaireAEntreprise }}"
+                        }
+                    </script>
+                    {% endfor %}
+                {% else %}
+                    <div class="col s12 m12 l12 mb-4">
+                        <h6 class="center-align"><strong>Aucun avis enregistré pour le moment</strong></h6>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div id="infos_procedure" class="modal">
+        <div class="modal-content">
+            <h4 class="center-align">Informations sur notre procédure de notation</h4>
+            <p class="center-align">Le processus de notation et avis écrit est régi par un <strong>processus validé</strong>.
+                Un document <strong>authentique contrôlé</strong> est remis au client pour déposer avis et notation
+                puis conservé dans nos archives.</p>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-close waves-effect btn-flat monpro waves-effect waves-light white-text">J'ai compris</a>
         </div>
     </div>
 {% endblock %}

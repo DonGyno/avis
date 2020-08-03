@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\AdminEditUserType;
 use App\Repository\UserRepository;
 use App\Form\AdminInscriptionType;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -63,9 +64,11 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin/liste-utilisateurs", name="app_admin_liste_users")
      * @param UserRepository $userRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
      * @return Response
      */
-    public function listeUtilisateur(UserRepository $userRepository)
+    public function listeUtilisateur(UserRepository $userRepository, PaginatorInterface $paginator, Request $request)
     {
         $users = $userRepository->findAllByUserRole('"ROLE_USER"');
         if(!$users)
@@ -75,7 +78,8 @@ class AdminController extends AbstractController
         }
         else
         {
-            return $this->render('admin/utilisateur/liste-utilisateurs.html.twig', ['utilisateurs'=>$users]);
+            $liste_users = $paginator->paginate($users,$request->query->getInt('page',1),10);
+            return $this->render('admin/utilisateur/liste-utilisateurs.html.twig', ['utilisateurs'=>$liste_users]);
         }
     }
 
@@ -90,13 +94,11 @@ class AdminController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         $user = $entityManager->getRepository(User::class)->find($id);
-        $form = $this->createForm(AdminEditUserType::class);
+        $form = $this->createForm(AdminEditUserType::class,$user);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {
-            $user->setPassword($this->passwordEncoder->encodePassword($user,$form->get('password')->getData()));
-            $user->setNom($form->get('nom')->getData());
-            $user->setPrenom($form->get('prenom')->getData());
+            $user = $form->getData();
             $entityManager->persist($user);
             $entityManager->flush();
             $errors = $validator->validate($user);

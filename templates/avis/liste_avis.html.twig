@@ -56,6 +56,9 @@
                 </table>
             {% endif %}
         </div>
+        <div class="row center-align mt-4">
+            {{ knp_pagination_render(avis,'bundles/Paginator/Pagination/materialize_pagination.html.twig') }}
+        </div>
         <div class="row mt-4 mb-4">
             <a data-path="{{ path('app_export_avis') }}" class="btn monpro waves-effect waves-light center" id="btn_export">Exporter les avis sélectionnés</a>
             <a href="{{ path('app_index_admin') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>

@@ -11,7 +11,12 @@ use App\Form\AvisEditType;
 use App\Form\AvisType;
 use App\Form\EnqueteType;
 use App\Repository\AvisRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use League\Csv\CannotInsertRecord;
+use League\Csv\Writer;
+use phpDocumentor\Reflection\Types\Void_;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -20,6 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Serializer\Serializer;
@@ -34,7 +40,7 @@ class EnvoiEnqueteController extends AbstractController
      * @param Request $request
      * @param ValidatorInterface $validator
      * @param MailerInterface $mailer
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws TransportExceptionInterface
      */
     public function formulaireEnvoiEnquete(Request $request,ValidatorInterface $validator, MailerInterface $mailer)
@@ -87,8 +93,11 @@ class EnvoiEnqueteController extends AbstractController
 
     /**
      * @Route("/liste-avis", name="app_liste_avis")
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
      */
-    public function listeAvis()
+    public function listeAvis(PaginatorInterface $paginator, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $avis = $em->getRepository(Avis::class)->findAll();
@@ -99,7 +108,8 @@ class EnvoiEnqueteController extends AbstractController
         }
         else
         {
-            return $this->render('avis/liste_avis.html.twig', ['avis'=>$avis]);
+            $liste_avis = $paginator->paginate($avis,$request->query->getInt('page',1),10);
+            return $this->render('avis/liste_avis.html.twig', ['avis'=>$liste_avis]);
         }
     }
 
@@ -122,19 +132,14 @@ class EnvoiEnqueteController extends AbstractController
         }
         else
         {
-            $form = $this->createForm(EnqueteType::class);
+            $form = $this->createForm(EnqueteType::class,$avis_client);
             $form->handleRequest($request);
             if($form->isSubmitted() && $form->isValid())
             {
+                $avis_client = $form->getData();
                 $avis_client->setDateReponseEnquete(new \DateTime());
                 $avis_client->setStatutAvis('Réponse enregistrée');
                 $avis_client->setIpDestinataire($request->getClientIp());
-                $avis_client->setNotePrestationRealisee($form->get('notePrestationRealisee')->getData());
-                $avis_client->setNoteProfessionnalismeEntreprise($form->get('noteProfessionnalismeEntreprise')->getData());
-                $avis_client->setNoteSatisfactionGlobale($form->get('noteSatisfactionGlobale')->getData());
-                $avis_client->setRecommanderCommentaireAEntreprise($form->get('recommanderCommentaireAEntreprise')->getData());
-                $avis_client->setTemoignageVideo($form->get('temoignageVideo')->getData());
-                $avis_client->setTelephoneDestinataire($form->get('telephoneDestinataire')->getData());
 
                 $entityManager->persist($avis_client);
                 $entityManager->flush();
@@ -254,7 +259,7 @@ class EnvoiEnqueteController extends AbstractController
      * @Route("/liste-avis/relance-avis/{id}", name="app_relance_avis")
      * @param $id
      * @param MailerInterface $mailer
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      * @throws TransportExceptionInterface
      */
     public function relanceEmail($id, MailerInterface $mailer)
@@ -298,25 +303,18 @@ class EnvoiEnqueteController extends AbstractController
      * @param AvisRepository $avisRepository
      * @param Request $request
      * @return Response
+     * @throws CannotInsertRecord
      */
-    public function exportAvis(AvisRepository $avisRepository, Request $request)
+    public function exportAvis(AvisRepository $avisRepository, Request $request, SerializerInterface $serializer)
     {
         if($request->isXmlHttpRequest())
         {
-
             $array_id = $request->request->get('array_id');
             $avis_export = $avisRepository->exportAvis($array_id);
-
-            $dumper = new AvisExportDumpCSV();
-            $response = new Response($dumper->dump($avis_export));
-
-            // file prefix was injected
-            $outFileName = 'export_avis_' . date('Ymd') . '.' . $dumper->getFileExtension();
-
-            $response->headers->set('Content-Type', $dumper->getContentType());
-            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"',$outFileName));
-
-            return $response;
+            $jsonContent = $serializer->serialize($avis_export,'json',['circular_reference_handler'=>function($object){
+                return $object->getId();
+            }]);
+            return new JsonResponse(['avis'=>$jsonContent]);
         }
         return $this->render('@Twig/Exception/error403.html.twig');
     }

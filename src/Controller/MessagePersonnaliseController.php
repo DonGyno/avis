@@ -75,7 +75,7 @@ class MessagePersonnaliseController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $message = $em->getRepository(MessagePersonnalise::class)->find($id);
-        $form = $this->createForm(MessageType::class);
+        $form = $this->createForm(MessageType::class,$message);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {

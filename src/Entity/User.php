@@ -63,15 +63,9 @@ class User implements UserInterface
      */
     private $fiches_prospection;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=MessagePersonnalise::class, inversedBy="messages_user")
-     */
-    private $messages;
-
     public function __construct()
     {
         $this->fiches_prospection = new ArrayCollection();
-        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,12 +161,12 @@ class User implements UserInterface
 
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+
     }
 
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
+
     }
 
     public function getUsername()
@@ -206,32 +200,6 @@ class User implements UserInterface
             if ($fichesProspection->getResponsableFicheProspection() === $this) {
                 $fichesProspection->setResponsableFicheProspection(null);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|MessagePersonnalise[]
-     */
-    public function getMessages(): Collection
-    {
-        return $this->messages;
-    }
-
-    public function addMessage(MessagePersonnalise $message): self
-    {
-        if (!$this->messages->contains($message)) {
-            $this->messages[] = $message;
-        }
-
-        return $this;
-    }
-
-    public function removeMessage(MessagePersonnalise $message): self
-    {
-        if ($this->messages->contains($message)) {
-            $this->messages->removeElement($message);
         }
 
         return $this;

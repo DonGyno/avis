@@ -1,0 +1,25 @@
+<footer class="page-footer monpro">
+    <div class="container">
+        <div class="row">
+            <div class="col l12 s12 center-align">
+                <h5 class="white-text">
+                    {% if titre_footer is defined and titre_footer.valueParametre is not null %}
+                        {{ titre_footer.valueParametre }}
+                    {% else %}
+                        Système de Gestion d'Avis MonProCertifie
+                    {% endif %}
+                </h5>
+                <br/>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copyright monpro lighten-1">
+        <div class="container center-align white-text">
+            MonProCertifie © 2020
+        </div>
+    </div>
+</footer>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}

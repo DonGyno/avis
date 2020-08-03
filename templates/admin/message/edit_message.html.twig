@@ -13,17 +13,24 @@
                 <div class="row">
                     <div class="input-field col s12">
                         <i class="material-icons prefix">title</i>
-                        {{ form_widget(formulaire.titre, { 'attr': { 'class': 'validate' }, 'value': message.titre }) }}
+                        {{ form_widget(formulaire.titre, { 'attr': { 'class': 'validate' } }) }}
                         {{ form_label(formulaire.titre) }}
                         {{ form_help(formulaire.titre) }}
                         {{ form_errors(formulaire.titre) }}
                     </div>
                     <div class="input-field col s12">
                         <i class="material-icons prefix">chat</i>
-                        {{ form_widget(formulaire.contenu, { 'attr': { 'class': 'validate materialize-textarea' }, 'value': message.contenu }) }}
+                        {{ form_widget(formulaire.contenu, { 'attr': { 'class': 'validate materialize-textarea' }}) }}
                         {{ form_label(formulaire.contenu) }}
                         {{ form_help(formulaire.contenu) }}
                         {{ form_errors(formulaire.contenu) }}
+                    </div>
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">person</i>
+                        {{ form_widget(formulaire.users, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.users) }}
+                        {{ form_help(formulaire.users) }}
+                        {{ form_errors(formulaire.users) }}
                     </div>
                 </div>
                 <div class="row">

@@ -13,14 +13,14 @@
                 <div class="row">
                     <div class="input-field col s6">
                         <i class="material-icons prefix">perm_identity</i>
-                        {{ form_widget(formulaire.nom, { 'attr': { 'class': 'validate' }, 'value': utilisateur.nom }) }}
+                        {{ form_widget(formulaire.nom, { 'attr': { 'class': 'validate' } }) }}
                         {{ form_label(formulaire.nom) }}
                         {{ form_help(formulaire.nom) }}
                         {{ form_errors(formulaire.nom) }}
                     </div>
                     <div class="input-field col s6">
                         <i class="material-icons prefix">perm_identity</i>
-                        {{ form_widget(formulaire.prenom, { 'attr': { 'class': 'validate' }, 'value': utilisateur.prenom }) }}
+                        {{ form_widget(formulaire.prenom, { 'attr': { 'class': 'validate' } }) }}
                         {{ form_label(formulaire.prenom) }}
                         {{ form_help(formulaire.prenom) }}
                         {{ form_errors(formulaire.prenom) }}

@@ -25,6 +25,13 @@
                         {{ form_help(formulaire.contenu) }}
                         {{ form_errors(formulaire.contenu) }}
                     </div>
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">person</i>
+                        {{ form_widget(formulaire.users, { 'attr': { 'class': 'validate' } }) }}
+                        {{ form_label(formulaire.users) }}
+                        {{ form_help(formulaire.users) }}
+                        {{ form_errors(formulaire.users) }}
+                    </div>
                 </div>
                 <div class="row">
                     {{ form_widget(formulaire.submit, { 'label': 'Ajouter le message' }) }}

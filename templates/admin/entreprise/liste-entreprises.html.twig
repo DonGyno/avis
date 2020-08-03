@@ -29,11 +29,11 @@
                             <td>{{ entreprise.adresseRue }} {{ entreprise.adresseCodePostal }} {{ entreprise.adresseVille }}</td>
                             <td>{{ entreprise.emailContact }}</td>
                             <td>
-                                <a href="{{ path('app_admin_editer_entreprise', {id: entreprise.id}) }}" class="btn-floating monpro"><i class="material-icons large">edit</i></a>
-                                <a href="{{ path('app_admin_supprimer_entreprise', {id: entreprise.id}) }}" class="btn-floating monpro"
+                                <a href="{{ path('app_admin_editer_entreprise', {id: entreprise.id}) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="&Eacute;diter l'entreprise"><i class="material-icons large">edit</i></a>
+                                <a href="{{ path('app_admin_supprimer_entreprise', {id: entreprise.id}) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="Supprimer l'entreprise"
                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette entreprise ?');"
                                 ><i class="material-icons large">delete</i></a>
-                                <a href="{{ path('app_view_entreprise', {id: entreprise.id, nom: entreprise.slug }) }}" class="btn-floating monpro">
+                                <a href="{{ path('app_view_entreprise', {id: entreprise.id, nom: entreprise.slug }) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="Voir la page de l'entreprise">
                                     <i class="material-icons large">visibility</i>
                                 </a>
                             </td>
@@ -42,6 +42,9 @@
                     </tbody>
                 </table>
             {% endif %}
+        </div>
+        <div class="row center-align mt-4">
+            {{ knp_pagination_render(entreprises,'bundles/Paginator/Pagination/materialize_pagination.html.twig') }}
         </div>
         <div class="row mt-4 mb-4">
             <a href="{{ path('app_index_admin') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>

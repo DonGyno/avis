@@ -95,6 +95,7 @@ class FicheProspectionController extends AbstractController
             $fiche_prospection_user->setDateCreation(new DateTime());
             $responsable_courant = $userRepository->findOneBy(['email'=>$this->getUser()->getUsername()]);
             $fiche_prospection_user->setResponsableFicheProspection($responsable_courant->getId());
+            $fiche_prospection_user->setStatut("En attente");
             $em = $this->getDoctrine()->getManager();
             $em->persist($fiche_prospection_user);
             $em->flush();
@@ -110,7 +111,7 @@ class FicheProspectionController extends AbstractController
                 $this->addFlash('success','Fiche de prospection : '.$form->get('nomEntreprise')->getData().' ajoutée avec succès !');
                 $email = (new TemplatedEmail())
                     ->from('avis@monprocertifie.fr')
-                    ->to('aleksandra@monprocertifie.fr')
+                    ->to('aleksandra@monprocertifie.fr','anthony@monprocertifie.fr')
                     ->subject('Création d\'une nouvelle fiche de prospection - MonProCertifié')
                     ->htmlTemplate('emails/admin_add_prospection_user.html.twig')
                     ->context([
@@ -274,6 +275,7 @@ class FicheProspectionController extends AbstractController
         if($form->isSubmitted() && $form->isValid())
         {
             $fiche = $form->getData();
+            $fiche->setDateDerniereModification(new \DateTime());
             $em->persist($fiche);
             $em->flush();
             $errors = $validator->validate($fiche);

@@ -33,9 +33,9 @@
                                     Aucun responsable
                                 {% endif %}</td>
                             <td id="actions_{{ fiche.id }}">
-                                <a href="{{ path('app_admin_modifier_fiche_prospection', {id: fiche.id}) }}" class="btn-floating monpro"><i class="material-icons large" title="Modifier">edit</i></a>
-                                <a href="" data-identification="{{ fiche.id }}" data-path="{{ path('app_admin_get_users') }}" class="btn-floating monpro change_responsable"><i class="material-icons large" title="Changer le responsable">find_replace</i></a>
-                                <a href="{{ path('app_admin_supprimer_fiche_prospection', {id: fiche.id}) }}" class="btn-floating monpro"
+                                <a href="{{ path('app_admin_modifier_fiche_prospection', {id: fiche.id}) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="&Eacute;diter la fiche"><i class="material-icons large">edit</i></a>
+                                <a href="" data-identification="{{ fiche.id }}" data-path="{{ path('app_admin_get_users') }}" class="btn-floating monpro change_responsable tooltipped" data-position="top" data-tooltip="Changer le responsable"><i class="material-icons large">find_replace</i></a>
+                                <a href="{{ path('app_admin_supprimer_fiche_prospection', {id: fiche.id}) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="Supprimer la fiche"
                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette fiche de prospection ?');"
                                 ><i class="material-icons large" title="Supprimer">delete</i></a>
                             </td>

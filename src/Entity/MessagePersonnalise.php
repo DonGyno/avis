@@ -30,13 +30,13 @@ class MessagePersonnalise
     private $contenu;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="messages")
+     * @ORM\ManyToMany(targetEntity=User::class)
      */
-    private $messages_user;
+    private $users;
 
     public function __construct()
     {
-        $this->messages_user = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -71,26 +71,24 @@ class MessagePersonnalise
     /**
      * @return Collection|User[]
      */
-    public function getMessagesUser(): Collection
+    public function getUsers(): Collection
     {
-        return $this->messages_user;
+        return $this->users;
     }
 
-    public function addMessagesUser(User $messagesUser): self
+    public function addUser(User $user): self
     {
-        if (!$this->messages_user->contains($messagesUser)) {
-            $this->messages_user[] = $messagesUser;
-            $messagesUser->addMessage($this);
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
         }
 
         return $this;
     }
 
-    public function removeMessagesUser(User $messagesUser): self
+    public function removeUser(User $user): self
     {
-        if ($this->messages_user->contains($messagesUser)) {
-            $this->messages_user->removeElement($messagesUser);
-            $messagesUser->removeMessage($this);
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
         }
 
         return $this;

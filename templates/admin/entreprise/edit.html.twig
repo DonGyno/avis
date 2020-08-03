@@ -13,14 +13,14 @@
             <div class="row">
                 <div class="input-field col s6">
                     <i class="material-icons prefix">business</i>
-                    {{ form_widget(formulaire.nom, { 'attr': { 'class': 'validate' }, 'value': entreprise.nom }) }}
+                    {{ form_widget(formulaire.nom, { 'attr': { 'class': 'validate' }}) }}
                     {{ form_label(formulaire.nom) }}
                     {{ form_help(formulaire.nom) }}
                     {{ form_errors(formulaire.nom) }}
                 </div>
                 <div class="input-field col s6">
                     <i class="material-icons prefix">poll</i>
-                    {{ form_widget(formulaire.raisonSociale, { 'attr': { 'class': 'validate' }, 'value': entreprise.raisonSociale }) }}
+                    {{ form_widget(formulaire.raisonSociale, { 'attr': { 'class': 'validate' } }) }}
                     {{ form_label(formulaire.raisonSociale) }}
                     {{ form_help(formulaire.raisonSociale) }}
                     {{ form_errors(formulaire.raisonSociale) }}
@@ -29,14 +29,14 @@
             <div class="row">
                 <div class="input-field col s6">
                     <i class="material-icons prefix">local_activity</i>
-                    {{ form_widget(formulaire.ape, { 'attr': { 'class': 'validate' }, 'value': entreprise.ape })  }}
+                    {{ form_widget(formulaire.ape, { 'attr': { 'class': 'validate' } })  }}
                     {{ form_label(formulaire.ape) }}
                     {{ form_help(formulaire.ape) }}
                     {{ form_errors(formulaire.ape) }}
                 </div>
                 <div class="input-field col s6">
                     <i class="material-icons prefix">policy</i>
-                    {{ form_widget(formulaire.sirenSiret, { 'attr': { 'class': 'validate' }, 'value': entreprise.sirenSiret })  }}
+                    {{ form_widget(formulaire.sirenSiret, { 'attr': { 'class': 'validate' } })  }}
                     {{ form_label(formulaire.sirenSiret) }}
                     {{ form_help(formulaire.sirenSiret) }}
                     {{ form_errors(formulaire.sirenSiret) }}
@@ -45,21 +45,21 @@
             <div class="row">
                 <div class="input-field col s12 m12 l4">
                     <i class="material-icons prefix">streetview</i>
-                    {{ form_widget(formulaire.adresseRue, { 'attr': { 'class': 'validate' }, 'value': entreprise.adresseRue }) }}
+                    {{ form_widget(formulaire.adresseRue, { 'attr': { 'class': 'validate' } }) }}
                     {{ form_label(formulaire.adresseRue) }}
                     {{ form_help(formulaire.adresseRue) }}
                     {{ form_errors(formulaire.adresseRue) }}
                 </div>
                 <div class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">location_city</i>
-                    {{ form_widget(formulaire.adresseVille, { 'attr': { 'class': 'validate' }, 'value': entreprise.adresseVille }) }}
+                    {{ form_widget(formulaire.adresseVille, { 'attr': { 'class': 'validate' } }) }}
                     {{ form_label(formulaire.adresseVille) }}
                     {{ form_help(formulaire.adresseVille) }}
                     {{ form_errors(formulaire.adresseVille) }}
                 </div>
                 <div class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">place</i>
-                    {{ form_widget(formulaire.adresseCodePostal, { 'attr': { 'class': 'validate' }, 'value': entreprise.adresseCodePostal }) }}
+                    {{ form_widget(formulaire.adresseCodePostal, { 'attr': { 'class': 'validate' } }) }}
                     {{ form_label(formulaire.adresseCodePostal) }}
                     {{ form_help(formulaire.adresseCodePostal) }}
                     {{ form_errors(formulaire.adresseCodePostal) }}
@@ -68,14 +68,14 @@
             <div class="row">
                 <div class="input-field col s6">
                     <i class="material-icons prefix">local_phone</i>
-                    {{ form_widget(formulaire.telephoneFixe, { 'attr': { 'class': 'validate' }, 'value': entreprise.telephoneFixe }) }}
+                    {{ form_widget(formulaire.telephoneFixe, { 'attr': { 'class': 'validate' } }) }}
                     {{ form_label(formulaire.telephoneFixe) }}
                     {{ form_help(formulaire.telephoneFixe) }}
                     {{ form_errors(formulaire.telephoneFixe) }}
                 </div>
                 <div class="input-field col s6">
                     <i class="material-icons prefix">smartphone</i>
-                    {{ form_widget(formulaire.telephonePortable, { 'attr': { 'class': 'validate' }, 'value': entreprise.telephonePortable }) }}
+                    {{ form_widget(formulaire.telephonePortable, { 'attr': { 'class': 'validate' } }) }}
                     {{ form_label(formulaire.telephonePortable) }}
                     {{ form_help(formulaire.telephonePortable) }}
                     {{ form_errors(formulaire.telephonePortable) }}
@@ -84,14 +84,14 @@
             <div class="row">
                 <div class="input-field col s12">
                     <i class="material-icons prefix">email</i>
-                    {{ form_widget(formulaire.emailContact, { 'attr': { 'class': 'validate' }, 'value': entreprise.emailContact }) }}
+                    {{ form_widget(formulaire.emailContact, { 'attr': { 'class': 'validate' } }) }}
                     {{ form_label(formulaire.emailContact) }}
                     {{ form_help(formulaire.emailContact) }}
                     {{ form_errors(formulaire.emailContact) }}
                 </div>
                 <div class="input-field col s12">
                     <i class="material-icons prefix">query_builder</i>
-                    {{ form_widget(formulaire.horaires, { 'attr': { 'class': 'validate materialize-textarea'}, 'value': entreprise.horaires }) }}
+                    {{ form_widget(formulaire.horaires, { 'attr': { 'class': 'validate materialize-textarea'} }) }}
                     {{ form_label(formulaire.horaires) }}
                     {{ form_help(formulaire.horaires) }}
                     {{ form_errors(formulaire.horaires) }}

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Liste Paramètres - {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <h1 class="center-align"> Liste des paramètres</h1>
+            </div>
+        </div>
+        <div class="row mt-3">
+            {% if parameters is defined %}
+                <table class="highlight centered responsive-table">
+                    <thead>
+                    <tr>
+                        <th>Nom du paramètre</th>
+                        <th>Valeur du paramètre</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for parameter in parameters %}
+                        <tr>
+                            <td>{{ parameter.nomParametre }}</td>
+                            <td>{{ parameter.valueParametre }}</td>
+                            <td>
+                                <a href="{{ path('app_admin_edition_parametre', {id: parameter.id}) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="&Eacute;diter l'parameter"><i class="material-icons large">edit</i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+        <div class="row center-align mt-4">
+            {{ knp_pagination_render(parameters,'bundles/Paginator/Pagination/materialize_pagination.html.twig') }}
+        </div>
+        <div class="row mt-4 mb-4">
+            <a href="{{ path('app_index_admin') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>
+        </div>
+    </div>
+{% endblock %}

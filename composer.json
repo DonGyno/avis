@@ -11,6 +11,7 @@
     "ext-json": "*",
     "amphp/http-client": "^4.0@dev",
     "knplabs/knp-paginator-bundle": "^5.3@dev",
+    "league/csv": "^9.0@dev",
     "scienta/doctrine-json-functions": "~4.1",
     "sensio/framework-extra-bundle": "^5.5@dev",
     "symfony/apache-pack": "dev-master",

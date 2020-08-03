@@ -11,7 +11,7 @@ class AvisExportDumpCSV
 
     public function dump($avis)
     {
-        $fp = fopen('php://temp','r+');
+        $fp = fopen('php://output','w+');
 
         // Header
         fputcsv($fp, array(
@@ -27,7 +27,7 @@ class AvisExportDumpCSV
             ),';');
         }
         // Return the content
-        rewind($fp);
+        //rewind($fp);
         $csv = stream_get_contents($fp);
         fclose($fp);
         return $csv;

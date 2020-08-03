@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Modifier un paramètre - {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container mb-4">
+    <div class="row">
+        <h3 class="center-align">Modification du paramètre : {% if parameter is defined %} {{ parameter.nomParametre }} {% endif %}</h3>
+    </div>
+    <div class="row">
+        {% if formulaire is defined %}
+            {{ form_start(formulaire, { 'attr': { 'class': 'validate' } }) }}
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">business</i>
+                    {{ form_widget(formulaire.valueParametre, { 'attr': { 'class': 'validate' }}) }}
+                    {{ form_label(formulaire.valueParametre) }}
+                    {{ form_help(formulaire.valueParametre) }}
+                    {{ form_errors(formulaire.valueParametre) }}
+                </div>
+            </div>
+            <div class="row">
+                {{ form_widget(formulaire.submit, { 'label': 'Modifier le paramètre' }) }}
+                <a href="{{ path('app_admin_liste_parametres') }}" class="btn monpro waves-effect waves-light center">Annuler</a>
+            </div>
+            {{ form_end(formulaire) }}
+        {% endif %}
+    </div>
+    <div class="row mt-4 mb-4">
+        <a href="{{ path('app_index_admin') }}" class="btn monpro waves-effect waves-light center">Retour à l'administration</a>
+    </div>
+{% endblock %}

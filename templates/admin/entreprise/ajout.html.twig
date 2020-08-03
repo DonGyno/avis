@@ -98,6 +98,22 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="input-field file-field col s12">
+                        <div class="btn monpro center-block">
+                            <span>
+                                <i class="material-icons prefix" style="top: 0;display: inline-flex;">save_alt</i>
+                                {{ form_label(formulaire.logo,'',{'label_attr':{'class':'white-text'}}) }}
+                            </span>
+                            {{ form_widget(formulaire.logo, { 'attr': { 'class': 'validate' } }) }}
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text" placeholder="Choisissez une image">
+                        </div>
+                        {{ form_help(formulaire.logo) }}
+                        {{ form_errors(formulaire.logo) }}
+                    </div>
+                </div>
+                <div class="row">
                     {{ form_widget(formulaire.submit, { 'label': 'Ajouter l\'entreprise' }) }}
                 </div>
                 {{ form_end(formulaire) }}

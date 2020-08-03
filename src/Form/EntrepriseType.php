@@ -7,12 +7,14 @@ use App\Entity\Entreprise;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\File;
 
 class EntrepriseType extends AbstractType
 {
@@ -40,6 +42,11 @@ class EntrepriseType extends AbstractType
             ->add('telephonePortable',TelType::class, ['label'=>'Téléphone Portable','help'=>'Le format du téléphone portable est la suivante : 06 XX XX XX XX ou 06.XX.XX.XX.XX','required'=>true])
             ->add('emailContact',EmailType::class, ['label'=>'Email de l\'entreprise','required'=>true])
             ->add('horaires', TextareaType::class, ['label'=>'Horaires de l\'entreprise','required'=>false])
+            ->add('logo',FileType::class, ['label'=>'Logo de l\'entreprise','mapped'=>false,'required'=>false,'constraints'=>[new File([
+                'maxSize'=>'10240k',
+                'mimeTypes'=>['image/jpeg','image/png','image/gif','image/jpg'],
+                'mimeTypesMessage'=>'Veuillez télécharger une image avec une extension valide'
+            ])]])
             ->add('submit', SubmitType::class, ['attr'=>['class'=>'btn monpro btn-lg btn-primary waves-effect waves-light'],])
         ;
     }

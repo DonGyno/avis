@@ -84,6 +84,11 @@ class Entreprise
      */
     private $slug;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $logo;
+
     public function slugify($text)
     {
         // replace non letter or digits by -
@@ -295,6 +300,18 @@ class Entreprise
     public function setSlug(?string $slug): self
     {
         $this->slug = $this->slugify($slug);
+
+        return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(?string $logo): self
+    {
+        $this->logo = $logo;
 
         return $this;
     }

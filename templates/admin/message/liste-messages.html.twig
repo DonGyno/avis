@@ -16,6 +16,7 @@
                     <tr>
                         <th>Titre message</th>
                         <th>Contenu message</th>
+                        <th>Destinataires</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -25,8 +26,13 @@
                             <td>{{ message.titre }}</td>
                             <td>{{ message.contenu }}</td>
                             <td>
-                                <a href="{{ path('app_admin_message_editer', {id: message.id}) }}" class="btn-floating monpro"><i class="material-icons large">edit</i></a>
-                                <a href="{{ path('app_admin_supprimer_message', {id: message.id}) }}" class="btn-floating monpro"
+                                {% for user in message.users %}
+                                    {{ user.prenom }} {{ user.nom }} <br>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="{{ path('app_admin_message_editer', {id: message.id}) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="&Eacute;diter le message"><i class="material-icons large">edit</i></a>
+                                <a href="{{ path('app_admin_supprimer_message', {id: message.id}) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="Supprimer le message"
                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?');"
                                 ><i class="material-icons large">delete</i></a>
                             </td>
