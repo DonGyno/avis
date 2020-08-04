@@ -40,12 +40,12 @@
                             <td>{% if avi.dateDerniereRelance is not null %}{{ avi.dateDerniereRelance|date('d/m/Y H:i',timezone='Europe/Paris') }}{% endif %}</td>
                             <td>
                                 {% if avi.dateReponseEnquete is not null %}
-                                <a href="{{ path('app_voir_avis', {id: avi.id}) }}" class="btn-floating monpro" title="Voir"><i class="material-icons large">visibility</i></a>
+                                <a href="{{ path('app_voir_avis', {id: avi.id}) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="Voir enqu&ecirc;te"><i class="material-icons large">visibility</i></a>
                                 {% if "ROLE_ADMIN" in app.user.roles %}
-                                    <a href="{{ path('app_edition_avis', {id: avi.id}) }}" class="btn-floating monpro" title="Modifier"><i class="material-icons large">create</i></a>
+                                    <a href="{{ path('app_edition_avis', {id: avi.id}) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="Modifier enqu&ecirc;te"><i class="material-icons large">create</i></a>
                                 {% endif %}
                                 {% else %}
-                                <a href="{{ path('app_relance_avis', {id: avi.id}) }}" class="btn-floating monpro" title="Relancer"
+                                <a href="{{ path('app_relance_avis', {id: avi.id}) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="Envoyer relance"
                                    onclick="return confirm('Êtes-vous sûr de vouloir envoyer la relance e-mail ?');"
                                 ><i class="material-icons large">send</i></a>
                                 {% endif %}

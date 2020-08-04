@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -42,6 +43,7 @@ class FicheProspectionController extends AbstractController
         {
             $fiche_prospection = $form->getData();
             $fiche_prospection->setDateCreation(new DateTime());
+            $fiche_prospection->setStatut('Validé');
             $em = $this->getDoctrine()->getManager();
             $em->persist($fiche_prospection);
             $em->flush();
@@ -94,7 +96,7 @@ class FicheProspectionController extends AbstractController
             $fiche_prospection_user = $form->getData();
             $fiche_prospection_user->setDateCreation(new DateTime());
             $responsable_courant = $userRepository->findOneBy(['email'=>$this->getUser()->getUsername()]);
-            $fiche_prospection_user->setResponsableFicheProspection($responsable_courant->getId());
+            $fiche_prospection_user->setResponsableFicheProspection($responsable_courant);
             $fiche_prospection_user->setStatut("En attente");
             $em = $this->getDoctrine()->getManager();
             $em->persist($fiche_prospection_user);
@@ -118,7 +120,9 @@ class FicheProspectionController extends AbstractController
                         "nomResponsable"=>$responsable_courant->getNom(),
                         "prenomResponsable"=>$responsable_courant->getPrenom(),
                         "nomFicheEntreprise"=>$fiche_prospection_user->getNomEntreprise(),
-                        "dateCreation"=>$fiche_prospection_user->getDateCreation()
+                        "dateCreation"=>$fiche_prospection_user->getDateCreation(),
+                        "pathFiche"=>$this->generateUrl('app_admin_modifier_fiche_prospection',['id'=>$fiche_prospection_user->getId()],UrlGeneratorInterface::ABSOLUTE_URL),
+                        "pathFicheValidation"=>$this->generateUrl('app_admin_valider_fiche_prospection_automatique',['id'=>$fiche_prospection_user->getId()],UrlGeneratorInterface::ABSOLUTE_URL)
                     ])
                 ;
                 $mailer->send($email);
@@ -130,7 +134,6 @@ class FicheProspectionController extends AbstractController
 
     /**
      * @Route("/admin/fiches-prospection/", name="app_admin_liste_fiche_prospection")
-     * @param Request $request
      * @param FicheProspectionRepository $ficheProspectionRepository
      * @return Response
      */
@@ -158,7 +161,7 @@ class FicheProspectionController extends AbstractController
     {
         $current_user = $this->getUser()->getUsername();
         $responsable = $userRepository->findOneBy(['email'=>$current_user]);
-        $fiches_prospections = $ficheProspectionRepository->findBy(['responsable_fiche_prospection'=>$responsable->getId()]);
+        $fiches_prospections = $ficheProspectionRepository->findBy(['responsable_fiche_prospection'=>$responsable->getId(),'statut'=>'Validé']);
         if(!$fiches_prospections)
         {
             $this->addFlash('error','Vous n\'avez aucune fiche de prospection pour le moment');
@@ -175,9 +178,11 @@ class FicheProspectionController extends AbstractController
      * @param Request $request
      * @param FicheProspectionRepository $ficheProspectionRepository
      * @param UserRepository $userRepository
+     * @param MailerInterface $mailer
      * @return Response
+     * @throws TransportExceptionInterface
      */
-    public function modificationResponsableAjax(Request $request, FicheProspectionRepository $ficheProspectionRepository, UserRepository $userRepository)
+    public function modificationResponsableAjax(Request $request, FicheProspectionRepository $ficheProspectionRepository, UserRepository $userRepository, MailerInterface $mailer)
     {
         if($request->isXmlHttpRequest())
         {
@@ -194,6 +199,19 @@ class FicheProspectionController extends AbstractController
             else
             {
                 $fiche_concernee->setResponsableFicheProspection($responsable);
+                $email = (new TemplatedEmail())
+                    ->from('avis@monprocertifie.fr')
+                    ->to($responsable->getEmail())
+                    ->subject('Attribution d\'une nouvelle fiche de prospection - MonProCertifié')
+                    ->htmlTemplate('emails/admin_add_prospection.html.twig')
+                    ->context([
+                        "nomResponsable"=>$responsable->getNom(),
+                        "prenomResponsable"=>$responsable->getPrenom(),
+                        "nomFicheEntreprise"=>$fiche_concernee->getNomEntreprise(),
+                        "dateCreation"=>$fiche_concernee->getDateCreation()
+                    ])
+                ;
+                $mailer->send($email);
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -203,6 +221,55 @@ class FicheProspectionController extends AbstractController
             return new JsonResponse(array(
                 'status'=>'Modification réussie !'
             ));
+        }
+    }
+
+    /**
+     * @Route("/admin/validation/fiche", name="app_admin_valider_fiche_prospection")
+     * @param Request $request
+     * @param FicheProspectionRepository $ficheProspectionRepository
+     * @return Response
+     */
+    public function validationFicheAjax(Request $request, FicheProspectionRepository $ficheProspectionRepository)
+    {
+        if($request->isXmlHttpRequest())
+        {
+            $id_fiche = $request->request->get('id_fiche');
+            $statut = $request->request->get('statut');
+            $fiche_concernee = $ficheProspectionRepository->find($id_fiche);
+            $fiche_concernee->setStatut($statut);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($fiche_concernee);
+            $em->flush();
+
+            return new JsonResponse(array(
+                'status'=>'Modification réussie !'
+            ));
+        }
+    }
+
+    /**
+     * @Route("/admin/validation/fiche/{id}", name="app_admin_valider_fiche_prospection_automatique")
+     * @param $id
+     * @return Response
+     */
+    public function validationFicheAutomatique($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $fiche = $em->getRepository(FicheProspection::class)->find($id);
+        $stamp_statut = $fiche->getStatut();
+        if($stamp_statut === "En attente")
+        {
+            $fiche->setStatut("Validé");
+            $em->persist($fiche);
+            $em->flush();
+            $this->addFlash('success','Validation réussie de la fiche suivante : '.$fiche->getNomEntreprise());
+            return $this->redirectToRoute('app_index_admin');
+        }
+        else
+        {
+            $this->addFlash('error','La fiche '.$fiche->getNomEntreprise().' a déjà été validée par un administrateur !');
+            return $this->redirectToRoute('app_index_admin');
         }
     }
 
@@ -264,9 +331,12 @@ class FicheProspectionController extends AbstractController
      * @param $id
      * @param Request $request
      * @param ValidatorInterface $validator
+     * @param MailerInterface $mailer
+     * @param UserRepository $userRepository
      * @return Response
+     * @throws TransportExceptionInterface
      */
-    public function modificationFicheProspectionUser($id, Request $request, ValidatorInterface $validator)
+    public function modificationFicheProspectionUser($id, Request $request, ValidatorInterface $validator, MailerInterface $mailer, UserRepository $userRepository)
     {
         $em = $this->getDoctrine()->getManager();
         $fiche = $em->getRepository(FicheProspection::class)->find($id);
@@ -284,6 +354,21 @@ class FicheProspectionController extends AbstractController
                 return $this->redirectToRoute('app_user_modifier_fiche_prospection', ["id"=>$fiche->getId()] );
             }
             else {
+                $responsable_courant = $userRepository->findOneBy(['email'=>$this->getUser()->getUsername()]);
+                $email = (new TemplatedEmail())
+                    ->from('avis@monprocertifie.fr')
+                    ->to('aleksandra@monprocertifie.fr','anthony@monprocertifie.fr')
+                    ->subject('Modification d\'une fiche de prospection - MonProCertifié')
+                    ->htmlTemplate('emails/admin_edit_prospection_user.html.twig')
+                    ->context([
+                        "nomResponsable"=>$responsable_courant->getNom(),
+                        "prenomResponsable"=>$responsable_courant->getPrenom(),
+                        "nomFicheEntreprise"=>$fiche->getNomEntreprise(),
+                        "pathFiche"=>$this->generateUrl('app_admin_modifier_fiche_prospection',['id'=>$fiche->getId()],UrlGeneratorInterface::ABSOLUTE_URL)
+                    ])
+                ;
+                $mailer->send($email);
+
                 $this->addFlash('success','Modification réussie avec succès');
                 return $this->redirectToRoute('app_user_liste_fiche_prospection');
             }

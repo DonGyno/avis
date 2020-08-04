@@ -526,3 +526,8 @@ div.card.large.logo-entreprise div.card-image img
 {
     background-color: #002e5b;
 }
+
+.page-footer
+{
+    padding-top: 40px;
+}

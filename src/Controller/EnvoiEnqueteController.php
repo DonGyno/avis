@@ -5,7 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Avis;
-use App\Entity\AvisExportDumpCSV;
+
 use App\Entity\BaseConvert;
 use App\Form\AvisEditType;
 use App\Form\AvisType;
@@ -13,13 +13,10 @@ use App\Form\EnqueteType;
 use App\Repository\AvisRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use League\Csv\CannotInsertRecord;
-use League\Csv\Writer;
-use phpDocumentor\Reflection\Types\Void_;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,9 +25,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\CsvEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class EnvoiEnqueteController extends AbstractController
 {
@@ -40,7 +34,7 @@ class EnvoiEnqueteController extends AbstractController
      * @param Request $request
      * @param ValidatorInterface $validator
      * @param MailerInterface $mailer
-     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      * @throws TransportExceptionInterface
      */
     public function formulaireEnvoiEnquete(Request $request,ValidatorInterface $validator, MailerInterface $mailer)
@@ -81,7 +75,7 @@ class EnvoiEnqueteController extends AbstractController
                         'nomDestinaire'=>$avis->getNomDestinataire(),
                         'prenomDestinaire'=>$avis->getPrenomDestinataire(),
                         'nomEntreprise'=>$avis->getEntrepriseConcernee()->getNom(),
-                        'token_security'=>$token_security
+                        'pathToken'=>$this->generateUrl('app_repondre_enquete',['token_security'=>$avis->getTokenSecurity()],UrlGeneratorInterface::ABSOLUTE_URL)
                     ])
                     ;
                 $mailer->send($email);
@@ -154,7 +148,7 @@ class EnvoiEnqueteController extends AbstractController
                     $this->addFlash('success','Merci d\'avoir répondu à notre enquête ! Vous pouvez désormais quitter la page');
                     $email_admin = (new TemplatedEmail())
                         ->from('avis@monprocertifie.fr')
-                        ->to('aleksandra@monprocertifie.fr')
+                        ->to('aleksandra@monprocertifie.fr','anthony@monprocertifie.fr')
                         ->subject('Réponse d\'une enquête de satisfaction')
                         ->htmlTemplate('emails/admin.html.twig')
                         ->context([
@@ -226,17 +220,11 @@ class EnvoiEnqueteController extends AbstractController
         }
         else
         {
-            $form = $this->createForm(AvisEditType::class);
+            $form = $this->createForm(AvisEditType::class,$avis_client);
             $form->handleRequest($request);
             if($form->isSubmitted() && $form->isValid())
             {
-                $avis_client->setNotePrestationRealisee($form->get('notePrestationRealisee')->getData());
-                $avis_client->setNoteProfessionnalismeEntreprise($form->get('noteProfessionnalismeEntreprise')->getData());
-                $avis_client->setNoteSatisfactionGlobale($form->get('noteSatisfactionGlobale')->getData());
-                $avis_client->setRecommanderCommentaireAEntreprise($form->get('recommanderCommentaireAEntreprise')->getData());
-                $avis_client->setTemoignageVideo($form->get('temoignageVideo')->getData());
-                $avis_client->setTelephoneDestinataire($form->get('telephoneDestinataire')->getData());
-
+                $avis_client = $form->getData();
                 $entityManager->persist($avis_client);
                 $entityManager->flush();
 
@@ -281,7 +269,7 @@ class EnvoiEnqueteController extends AbstractController
                     'nomDestinaire'=>$avis_client->getNomDestinataire(),
                     'prenomDestinaire'=>$avis_client->getPrenomDestinataire(),
                     'nomEntreprise'=>$avis_client->getEntrepriseConcernee()->getNom(),
-                    'token_security'=>$avis_client->getTokenSecurity()
+                    'pathToken'=>$this->generateUrl('app_repondre_enquete',['token_security'=>$avis_client->getTokenSecurity()],UrlGeneratorInterface::ABSOLUTE_URL)
                 ])
             ;
             $mailer->send($email);

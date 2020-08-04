@@ -341,4 +341,65 @@ $(document).ready(function () {
             rating: $(this).text()
         });
     });
+
+    $('a.change_statut').on('click', function (e){
+        e.preventDefault();
+        const valid_path = $(this).data('path');
+        const valid_fiche_id = $(this).data('identification');
+        const current_statut = $('td#statut_'+valid_fiche_id).text();
+        const select_statut = $('<form><div class=\"input-field col s12\"><select id=\"select_statut_' + valid_fiche_id + '\"><option value=\"\" disabled selected>Choisir un statut</option><option value=\"Validé\">Validé</option><option value=\"En attente\">En attente</option></select><label>Statut</label></div></form>').hide();
+
+        /* Partie changement actions */
+        const valider_action = $('<a href="" class="btn-floating monpro btn_statut valider_action_statut"><i class="material-icons large" title="Valider">done</i></a>').hide();
+        const annuler_action = $('<a href="" class="btn-floating monpro btn_statut"><i class="material-icons large" title="Annuler">close</i></a>').hide();
+        const current_value_user = $("td#statut_" + valid_fiche_id).html().trim();
+        $("td#actions_" + valid_fiche_id + " > a").hide(200);
+        $("td#actions_" + valid_fiche_id).append(valider_action).append(annuler_action);
+        valider_action.show(200);
+        annuler_action.show(200);
+        annuler_action.on('click', function (e) {
+            e.preventDefault();
+            $("td#actions_" + valid_fiche_id + " > a.btn_statut").hide(200, function () {
+                $(this).remove();
+                $("td#actions_" + valid_fiche_id + " > a").show(200);
+                $("td#statut_" + valid_fiche_id + " form").hide(200, function () {
+                    $("td#statut_" + valid_fiche_id).html('').append(current_value_user);
+                    current_value_user.show(200);
+                });
+            });
+        });
+        $("td#statut_" + valid_fiche_id).html(select_statut);
+        materialize.FormSelect.init($("select#select_statut_" + valid_fiche_id));
+        select_statut.show(200);
+        valider_action.on('click', function (e){
+            e.preventDefault();
+            const val_select_statut = $('select#select_statut_' + valid_fiche_id).find(":selected").val();
+            if(val_select_statut !== "")
+            {
+                $.ajax({
+                    type: "POST",
+                    url: valid_path,
+                    data: {'id_fiche': valid_fiche_id, 'statut': val_select_statut},
+                    dataType: "json"
+                }).done(function (){
+                    $("td#actions_" + valid_fiche_id + " > a.btn_statut").hide(200, function () {
+                        $(this).remove();
+                        $("td#actions_" + valid_fiche_id + " > a").show(200);
+                        $("td#statut_" + valid_fiche_id + " form").hide(200, function () {
+                            $("td#statut_" + valid_fiche_id).html('').append(val_select_statut);
+                        });
+                    });
+                    const div_flash = '<div class="notifications flash-success p-2 center-align">Changement du statut réussi !</div>';
+                    $('main').prepend(div_flash);
+                    $('main > div.notifications').delay(3000).fadeOut(1000);
+                });
+            }
+            else
+            {
+                const div_flash = '<div class="notifications flash-error p-2 center-align">Attention ! Veuillez sélectionner une option valide dans la liste déroulante !</div>';
+                $('main').prepend(div_flash);
+                $('main > div.notifications').delay(5000).fadeOut(1000);
+            }
+        });
+    });
 });

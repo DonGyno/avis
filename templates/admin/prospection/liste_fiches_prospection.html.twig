@@ -3,7 +3,7 @@
 {% block title %} Liste Fiches Prospection - {{ parent() }} {% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container mb-4">
         <div class="row">
             <div class="col s12">
                 <h1 class="center-align"> Liste des fiches de prospection</h1>
@@ -18,6 +18,7 @@
                         <th>Adresse de l'entreprise</th>
                         <th>Email de l'entreprise</th>
                         <th>Responsable de la prospection</th>
+                        <th>Statut</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -32,9 +33,11 @@
                                 {% else %}
                                     Aucun responsable
                                 {% endif %}</td>
+                            <td id="statut_{{ fiche.id }}">{{ fiche.statut }}</td>
                             <td id="actions_{{ fiche.id }}">
                                 <a href="{{ path('app_admin_modifier_fiche_prospection', {id: fiche.id}) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="&Eacute;diter la fiche"><i class="material-icons large">edit</i></a>
                                 <a href="" data-identification="{{ fiche.id }}" data-path="{{ path('app_admin_get_users') }}" class="btn-floating monpro change_responsable tooltipped" data-position="top" data-tooltip="Changer le responsable"><i class="material-icons large">find_replace</i></a>
+                                <a href="" data-identification="{{ fiche.id }}" data-path="{{ path('app_admin_valider_fiche_prospection') }}" class="btn-floating monpro change_statut tooltipped" data-position="top" data-tooltip="Changer le statut"><i class="material-icons large">thumbs_up_down</i></a>
                                 <a href="{{ path('app_admin_supprimer_fiche_prospection', {id: fiche.id}) }}" class="btn-floating monpro tooltipped" data-position="top" data-tooltip="Supprimer la fiche"
                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette fiche de prospection ?');"
                                 ><i class="material-icons large" title="Supprimer">delete</i></a>
